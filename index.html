@@ -2003,12 +2003,11 @@ function renderSingleCard(r, idx, q='') {
         ${r.so_tbi ? `<span class="kh-sogcs">${hi(r.so_tbi,q)}</span>` : ''}
         ${r.so_tbi && phone ? `<span class="kh-sep">-</span>` : ''}
         ${phone ? `<a class="kh-phone" href="tel:${phone.replace(/[^0-9+]/g,'')}" onclick="event.stopPropagation()"><svg class='phone-icon' width='11' height='11' viewBox='0 0 24 24' fill='#ef4444' style='vertical-align:middle;margin-right:2px'><path d='M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24c1.12.37 2.33.57 3.57.57a1 1 0 011 1V20a1 1 0 01-1 1C10.07 21 3 13.93 3 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.45.57 3.57a1 1 0 01-.25 1.02l-2.2 2.2z'/></svg> ${hi(phone,q)}</a>` : ''}
-        ${phone && r.ghi_chu ? `<span class="kh-sep">-</span>` : ''}
-        ${r.ghi_chu ? `<span class="kh-ghichu">${hi(r.ghi_chu,q)}</span>` : ''}
       </div>
 
       ${r.dia_chi ? `<div class="kh-addr-line"><a class="addr-link" href="${mapsUrl(r)}" target="_blank" onclick="event.stopPropagation()">📍 ${hi(cardAddr(r.dia_chi),q)}</a></div>` : ''}
       ${r.dinh_vi ? `<div class="kh-addr-line" style="color:#22c55e;font-size:14px;font-weight:400;margin-top:2px"><a class="addr-link" href="https://www.google.com/maps?q=${encodeURIComponent(r.dinh_vi)}" target="_blank" onclick="event.stopPropagation()" style="color:#22c55e">🎯 ${hi(r.dinh_vi,q)}<span class="addr-map-icon" style="font-size:14px">🗺</span></a></div>` : ''}
+      ${r.ghi_chu ? `<div class="kh-addr-line" style="font-size:14px;font-weight:400;margin-top:2px;color:var(--text-dim)">💬 ${hi(r.ghi_chu,q)}</div>` : ''}
     </div>`;
 }
 

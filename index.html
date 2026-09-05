@@ -2007,7 +2007,7 @@ function renderSingleCard(r, idx, q='') {
         ${r.ghi_chu ? `<span class="kh-ghichu">${hi(r.ghi_chu,q)}</span>` : ''}
       </div>
 
-      ${r.dia_chi ? `<div class="kh-addr-line"><a class="addr-link" href="${mapsUrl(r)}" target="_blank" onclick="event.stopPropagation()">📍 ${hi(cardAddr(r.dia_chi),q)}<span class="addr-map-icon">🗺</span></a></div>` : ''}
+      ${r.dia_chi ? `<div class="kh-addr-line"><a class="addr-link" href="${mapsUrl(r)}" target="_blank" onclick="event.stopPropagation()">📍 ${hi(cardAddr(r.dia_chi),q)}</a></div>` : ''}
       ${r.dinh_vi ? `<div class="kh-addr-line" style="color:#22c55e;font-size:14px;font-weight:400;margin-top:2px"><a class="addr-link" href="https://www.google.com/maps?q=${encodeURIComponent(r.dinh_vi)}" target="_blank" onclick="event.stopPropagation()" style="color:#22c55e">🎯 ${hi(r.dinh_vi,q)}<span class="addr-map-icon" style="font-size:14px">🗺</span></a></div>` : ''}
     </div>`;
 }
@@ -2150,7 +2150,7 @@ function showDetail(idx) {
     ['Số TBi', esc(r.so_tbi)||'—', 1],
     ['Danh Số', `<span style="color:var(--accent-glow);font-weight:500">${esc(r.danh_so)||'—'}</span>`],
     ['Tên KH', `<span style="color:var(--accent-glow);font-weight:500">${esc(r.ten_khach_hang)}</span>`],
-    ['Địa chỉ', r.dia_chi ? `<a class="addr-link" href="${mapsUrl(r)}" target="_blank">${esc(r.dia_chi)} <span class="addr-map-icon">🗺</span></a>` : '—', 1],
+    ['Địa chỉ', r.dia_chi ? `<a class="addr-link" href="${mapsUrl(r)}" target="_blank">${esc(r.dia_chi)}</a>` : '—', 1],
     ['Định vị', `<div style="display:flex;gap:6px;align-items:center"><input type="text" class="ghi-chu-input dinh-vi-input" style="border-color:#3b82f6;flex:1" value="${esc(r.dinh_vi||'')}" data-ma="${esc(r.ma_khach_hang)}" placeholder="VD: 10.762622,106.660172" oninput="saveDinhVi(this)"><button onclick="getMyLocation('${esc(r.ma_khach_hang)}')" style="background:#15803d;color:#fff;border:none;border-radius:8px;padding:8px 10px;font-size:15px;font-weight:500;cursor:pointer;white-space:nowrap;font-family:'Inter',sans-serif;flex-shrink:0">📍 Vị trí</button></div>`],
     ['Số Pha', esc(r.so_pha)||'—'],
     ['SĐT', phoneHtml],

@@ -935,12 +935,12 @@ tbody td { padding: 4px 8px; font-size: 14px; font-weight: 500; vertical-align: 
 .info-row {
   display: flex;
   gap: 12px;
-  padding: 6px 0;
+  padding: 3px 0;
   border-bottom: 1px solid var(--border);
   align-items: flex-start;
 }
 .info-row:last-child { border-bottom: none; }
-.info-label { font-size: 15px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.07em; color: #64748b; min-width: 100px; margin-top: 2px; flex-shrink: 0; }
+.info-label { font-size: 15px; font-weight: 500; letter-spacing: 0.07em; color: #64748b; min-width: 100px; margin-top: 2px; flex-shrink: 0; }
 .info-value { font-size: 15px; font-weight: 500; color: var(--text); flex: 1; word-break: break-word; }
 .info-value.dim { color: var(--text-dim); opacity: 0.7; }
 .modal .badge { font-size: 15px; font-weight: 500; }
@@ -2135,16 +2135,16 @@ function showDetail(idx) {
   const rows = [
     ['STT', esc(r.stt)||'—', 1],
     ['Mã KH', `<span class="ma-kh" style="font-size:15px">${esc(r.ma_khach_hang)}</span>`],
-    ['Mã Số GCS', esc(r.ma_sogcs)||'—', 1],
-    ['Số TBi', esc(r.so_tbi)||'—', 1],
-    ['Danh Số', `<span style="color:var(--accent-glow);font-weight:500">${esc(r.danh_so)||'—'}</span>`],
+    ['Mã số GCS', esc(r.ma_sogcs)||'—', 1],
+    ['Số TBI', esc(r.so_tbi)||'—', 1],
+    ['Danh số', `<span style="color:var(--accent-glow);font-weight:500">${esc(r.danh_so)||'—'}</span>`],
     ['Tên KH', `<span style="color:var(--accent-glow);font-weight:500">${esc(r.ten_khach_hang)}</span>`],
     ['Địa chỉ', r.dia_chi ? `<a class="addr-link" href="${mapsUrl(r)}" target="_blank">${esc(r.dia_chi)}</a>` : '—', 1],
     ['Định vị', `<div style="display:flex;gap:6px;align-items:center"><input type="text" class="ghi-chu-input dinh-vi-input" style="border-color:#3b82f6;flex:1" value="${esc(r.dinh_vi||'')}" data-ma="${esc(r.ma_khach_hang)}" placeholder="VD: 10.762622,106.660172" oninput="saveDinhVi(this)"><button onclick="getMyLocation('${esc(r.ma_khach_hang)}')" style="background:#15803d;color:#fff;border:none;border-radius:8px;padding:8px 10px;font-size:15px;font-weight:500;cursor:pointer;white-space:nowrap;font-family:'Inter',sans-serif;flex-shrink:0">📍 Vị trí</button></div>`],
-    ['Số Pha', esc(r.so_pha)||'—'],
+    ['Số pha', esc(r.so_pha)||'—'],
     ['SĐT', phoneHtml],
-    ['Mã Trạm', esc(r.ma_tram)||'—', 1],
-    ['Tên Trạm', esc(r.ten_tram)||'—', 1],
+    ['Mã trạm', esc(r.ma_tram)||'—', 1],
+    ['Tên trạm', esc(r.ten_tram)||'—', 1],
     ['Ghi chú', `<input type="text" class="ghi-chu-input ghi-chu-field" value="${esc(r.ghi_chu||'')}" data-ma="${esc(r.ma_khach_hang)}" placeholder="Nhập ghi chú..." oninput="saveGhiChu(this)">`],
     ['Nhóm', r.ma_nhom ? `<span class="badge" style="background:${nhomColor(r.ma_nhom)}22;color:${nhomColor(r.ma_nhom)};border:1px solid ${nhomColor(r.ma_nhom)}44">${esc(r.ma_nhom)}</span>` : '—'],
   ];

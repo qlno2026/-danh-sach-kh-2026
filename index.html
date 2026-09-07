@@ -182,8 +182,8 @@ body.light-mode .logo-icon { display: none; }
 body.light-mode .upload-btn-header { background: #e2e8f0; color: #0f172a; border-color: #94a3b8; font-weight: 700; }
 body.light-mode .theme-toggle { background: #e2e8f0; border: 2px solid #94a3b8; color: #0f172a; }
 body.light-mode .theme-toggle::before { background: #d1d5db; }
-body.light-mode .search-box { background: #ffffff; border-color: #94a3b8; }
-body.light-mode .search-box input { color: #000000; font-weight: 500; }
+body.light-mode .search-box { background: #f1f5f9; border-color: #cbd5e1; }
+body.light-mode .search-box input { background: #f1f5f9; border-color: #cbd5e1; color: #000000; font-weight: 500; }
 body.light-mode .search-box input::placeholder { color: #64748b; }
 body.light-mode .filter-row { background: #ffffff; }
 body.light-mode .filter-row select, body.light-mode .filter-select { color: #000000; font-weight: 500; background: #e2e8f0; border: 1.5px solid #1e40af; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='%23000000'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; }
@@ -198,7 +198,7 @@ body.light-mode #sortDanhSo.active { background: #1e40af; }
 body.light-mode #sortMaKH.active { background: #166534; }
 body.light-mode #sortSoGCS.active { background: #9a3412; }
 body.light-mode #sortTenKH.active { background: #6b21a8; }
-body.light-mode .kh-card { background: #f8fafc; border: 1.5px solid #e2e8f0; font-size: 15px; }
+body.light-mode .kh-card { background: #f1f5f9; border: 1.5px solid #e2e8f0; font-size: 15px; }
 body.light-mode .card-list { gap: 3px; }
 body.light-mode .kh-name { color: #3b82f6; font-weight: 400; font-size: 15px; }
   @media (max-width: 639.98px) { body.light-mode .kh-name { font-size: 15px; } }
@@ -442,7 +442,7 @@ body.light-mode .count-tien { color: #9a3412; font-weight: 400; }
   background: rgba(71,85,105,0.35);
   border: 1px solid var(--border);
   border-radius: 10px;
-  padding: 0px 12px 0px 36px;
+  padding: 0px 12px 0px 42px;
   color: var(--text);
   font-size: 15px;
   font-weight: 500;
@@ -454,7 +454,7 @@ body.light-mode .count-tien { color: #9a3412; font-weight: 400; }
 }
 .search-box input:focus { border-color: var(--accent); }
 .search-box input::placeholder { color: var(--text-dim); font-weight: 500; }
-.search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-dim); font-size: 14px; pointer-events: none; }
+.search-icon { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); color: var(--text-dim); font-size: 18px; pointer-events: none; }
 .search-clear {
   position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
   width: 22px; height: 22px; border-radius: 50%;
@@ -603,6 +603,7 @@ body.light-mode .kh-card.highlighted { background: rgba(0,150,255,0.1); border-c
 
 .kh-ma-line { margin-bottom: 4px; }
 .kh-card-mid { display: flex; gap: 3px; flex-wrap: nowrap; margin-bottom: 5px; align-items: center; overflow: hidden; }
+.kh-phone-line { display: flex; align-items: center; gap: 3px; margin-bottom: 5px; overflow: hidden; }
 .kh-ma { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 15px; color: #e2e8f0; font-weight: 400; white-space: nowrap; }
 .kh-sogcs { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 15px; color: #94a3b8; font-weight: 400; white-space: nowrap; }
 .kh-phone { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 15px; color: #94a3b8; font-weight: 400; text-decoration: none; white-space: nowrap; } .kh-phone .phone-icon { color: #ef4444; margin-right: 2px; font-style: normal; }
@@ -1990,9 +1991,8 @@ function renderSingleCard(r, idx, q='') {
         ${r.ma_sogcs ? `<span class="kh-sogcs">${hi(r.ma_sogcs,q)}</span>` : ''}
         ${r.ma_sogcs && r.so_tbi ? `<span class="kh-sep">-</span>` : ''}
         ${r.so_tbi ? `<span class="kh-sogcs">${hi(r.so_tbi,q)}</span>` : ''}
-        ${r.so_tbi && phone ? `<span class="kh-sep">-</span>` : ''}
-        ${phone ? `<a class="kh-phone" href="tel:${phone.replace(/[^0-9+]/g,'')}" onclick="event.stopPropagation()"><svg class='phone-icon' width='11' height='11' viewBox='0 0 24 24' fill='#ef4444' style='vertical-align:middle;margin-right:2px'><path d='M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24c1.12.37 2.33.57 3.57.57a1 1 0 011 1V20a1 1 0 01-1 1C10.07 21 3 13.93 3 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.45.57 3.57a1 1 0 01-.25 1.02l-2.2 2.2z'/></svg> ${hi(phone,q)}</a>` : ''}
       </div>
+      ${phone ? `<div class="kh-phone-line"><a class="kh-phone" href="tel:${phone.replace(/[^0-9+]/g,'')}" onclick="event.stopPropagation()"><svg class='phone-icon' width='11' height='11' viewBox='0 0 24 24' fill='#ef4444' style='vertical-align:middle;margin-right:2px'><path d='M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24c1.12.37 2.33.57 3.57.57a1 1 0 011 1V20a1 1 0 01-1 1C10.07 21 3 13.93 3 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.45.57 3.57a1 1 0 01-.25 1.02l-2.2 2.2z'/></svg> ${hi(phone,q)}</a></div>` : ''}
 
       ${r.dia_chi ? `<div class="kh-addr-line"><a class="addr-link" href="${mapsUrl(r)}" target="_blank" onclick="event.stopPropagation()">📍 ${hi(cardAddr(r.dia_chi),q)}</a></div>` : ''}
       ${r.dinh_vi ? `<div class="kh-addr-line" style="color:#22c55e;font-size:14px;font-weight:400;margin-top:2px"><a class="addr-link" href="https://www.google.com/maps?q=${encodeURIComponent(r.dinh_vi)}" target="_blank" onclick="event.stopPropagation()" style="color:#22c55e">🎯 ${hi(r.dinh_vi,q)}<span class="addr-map-icon" style="font-size:14px">🗺</span></a></div>` : ''}
@@ -2181,12 +2181,10 @@ function saveGhiChu(input) {
     if (val) {
       if (gcEl) { gcEl.innerHTML = hi(val); }
       else {
-        const phoneEl = card.querySelector('.kh-phone');
-        const span = document.createElement('span');
-        span.className = 'kh-ghichu';
-        span.innerHTML = hi(val);
-        if (phoneEl) phoneEl.parentNode.insertBefore(span, null);
-        else card.querySelector('.kh-card-mid')?.appendChild(span);
+      const span = document.createElement('span');
+      span.className = 'kh-ghichu';
+      span.innerHTML = hi(val);
+      card.querySelector('.kh-card-mid')?.appendChild(span);
       }
     } else if (gcEl) {
       gcEl.remove();

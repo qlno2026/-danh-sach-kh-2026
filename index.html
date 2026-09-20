@@ -67,7 +67,7 @@ body {
 }
 
 .header-title { font-size: 22px; font-weight: 300; letter-spacing: 0.3px; color: #ffffff; }
-.header-sub { font-size: 12px; color: var(--text-dim); margin-top: 1px; overflow: hidden; text-overflow: ellipsis; max-width: 200px; }
+.header-sub { font-size: 12px; color: rgba(255,255,255,0.88); margin-top: 4px; overflow: hidden; text-overflow: ellipsis; max-width: 200px; }
 .header-clock { display: flex; flex-direction: column; align-items: center; position: absolute; right: 12px; top: 50%; transform: translateY(-50%); white-space: nowrap; z-index: 210; }
 .header-clock .clock-time { font-size: 22px; font-weight: 800; color: #ffffff; letter-spacing: 1px; line-height: 1.2; }
 .header-clock .clock-date { font-size: 12px; font-weight: 300; color: rgba(255,255,255,0.75); margin-top: 2px; text-align: center; }
@@ -130,13 +130,26 @@ body.light-mode .action-btn { background: #e2e8f0; color: #1e293b; border: 2px s
   font-size: 14px;
   cursor: pointer;
   display: flex; align-items: center; justify-content: center;
-  transition: all 0.2s;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
   position: relative;
   padding: 0;
   overflow: hidden;
+  /* Nổi khối: viền sáng + đổ bóng nhiều lớp (tĩnh, không phập phồng) */
+  box-shadow:
+    0 0 0 1.5px rgba(255,255,255,0.72),
+    0 4px 9px rgba(0,0,0,0.38),
+    0 0 10px rgba(96,165,250,0.32);
 }
-.theme-toggle-img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; animation: spin-star 8s linear infinite; }
-@keyframes spin-star { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+.theme-toggle-img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; transform: translateZ(0); }
+/* Lớp bóng bán cầu tạo cảm giác khối 3D */
+.theme-toggle::after {
+  content: "";
+  position: absolute; inset: 0;
+  border-radius: 50%;
+  background: linear-gradient(145deg, rgba(255,255,255,0.30) 0%, rgba(255,255,255,0) 42%, rgba(0,0,0,0.16) 100%);
+  pointer-events: none;
+}
+.theme-toggle:hover { transform: translateY(-2px) scale(1.06); }
 body.light-mode .theme-toggle { background: #000; border: none; }
 body.light-mode .theme-toggle-img { border-radius: 50%; }
 .theme-toggle:active { transform: scale(0.9); }
@@ -170,6 +183,65 @@ body.light-mode .theme-toggle-img { border-radius: 50%; }
 body.light-mode .notes-tab-btn { background: #e2e8f0; color: #64748b; border: 2px solid #1e3a5f; }
 body.light-mode .notes-tab-btn.active { background: transparent; border-color: #00d4ff; box-shadow: 0 0 10px rgba(0,212,255,0.35); }
 
+/* ── NỔI KHỐI: đồng bộ viền sáng + đổ bóng nhiều lớp cho nút hành động & nút tab ── */
+.action-btn,
+.notes-tab-btn,
+.upload-btn-header,
+.sort-btn,
+.page-btn,
+.big-upload-btn {
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.30),
+    0 3px 8px rgba(0,0,0,0.42),
+    inset 0 1px 0 rgba(255,255,255,0.14);
+}
+/* Trạng thái active: thêm chiều sâu, giữ ánh sáng nhận diện của từng nhóm */
+.notes-tab-btn.active {
+  box-shadow:
+    0 0 0 1px rgba(0,212,255,0.55),
+    0 3px 10px rgba(0,0,0,0.45),
+    0 0 12px rgba(0,212,255,0.40),
+    inset 0 1px 0 rgba(255,255,255,0.22);
+}
+.sort-btn.active {
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.45),
+    0 3px 10px rgba(0,0,0,0.45),
+    inset 0 1px 0 rgba(255,255,255,0.25);
+}
+.page-btn.active {
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.50),
+    0 3px 10px rgba(0,0,0,0.45),
+    0 0 12px rgba(59,130,246,0.45),
+    inset 0 1px 0 rgba(255,255,255,0.20);
+}
+/* Biến thể cho chế độ sáng: viền trắng + bóng tối nhẹ */
+body.light-mode .action-btn,
+body.light-mode .notes-tab-btn,
+body.light-mode .upload-btn-header,
+body.light-mode .sort-btn,
+body.light-mode .page-btn,
+body.light-mode .big-upload-btn {
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.85),
+    0 2px 6px rgba(15,23,42,0.18),
+    inset 0 1px 0 rgba(255,255,255,0.90);
+}
+body.light-mode .notes-tab-btn.active {
+  box-shadow:
+    0 0 0 1px rgba(0,212,255,0.60),
+    0 2px 8px rgba(15,23,42,0.20),
+    0 0 10px rgba(0,212,255,0.35);
+}
+body.light-mode .sort-btn.active,
+body.light-mode .page-btn.active {
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.85),
+    0 3px 8px rgba(15,23,42,0.28),
+    inset 0 1px 0 rgba(255,255,255,0.40);
+}
+
 /* ── LIGHT MODE ───────────────────────── */
 body.light-mode {
   background: #ffffff;
@@ -177,10 +249,10 @@ body.light-mode {
 }
 body.light-mode .header { background: #1e40af; border-bottom: none; }
 body.light-mode .header-title { color: #ffffff; font-weight: 300; }
-body.light-mode .header-sub { color: #94a3b8; font-weight: 400; }
+body.light-mode .header-sub { color: rgba(255,255,255,0.9); font-weight: 400; }
 body.light-mode .logo-icon { display: none; }
 body.light-mode .upload-btn-header { background: #e2e8f0; color: #0f172a; border-color: #94a3b8; font-weight: 700; }
-body.light-mode .theme-toggle { background: #e2e8f0; border: 2px solid #94a3b8; color: #0f172a; }
+body.light-mode .theme-toggle { background: #000; border: none; color: #0f172a; }
 body.light-mode .theme-toggle::before { background: #d1d5db; }
 body.light-mode .search-box { background: #f1f5f9; border-color: #cbd5e1; }
 body.light-mode .search-box input { background: #f1f5f9; border-color: #cbd5e1; color: #000000; font-weight: 500; }
@@ -197,19 +269,22 @@ body.light-mode .sort-btn.active { background: #1e40af; color: #ffffff; }
 body.light-mode #sortDanhSo.active { background: #1e40af; }
 body.light-mode #sortMaKH.active { background: #166534; }
 body.light-mode #sortSoGCS.active { background: #9a3412; }
-body.light-mode #sortTenKH.active { background: #6b21a8; }
-body.light-mode .kh-card { background: #f1f5f9; border: 1.5px solid #e2e8f0; font-size: 15px; }
+body.light-mode .kh-card { background: #f1f5f9; border: 1.5px solid #cbd5e1; box-shadow: 0 1px 2px rgba(15,23,42,0.06), 0 1px 4px rgba(15,23,42,0.08); font-size: 15px; }
 body.light-mode .card-list { gap: 3px; }
-body.light-mode .kh-name { color: #3b82f6; font-weight: 400; font-size: 15px; }
+body.light-mode .kh-name { color: #1e40af; font-weight: 400; font-size: 15px; }
   @media (max-width: 639.98px) { body.light-mode .kh-name { font-size: 15px; } }
 body.light-mode .kh-ma-line, body.light-mode .kh-phone-line { color: #64748b; font-weight: 600; font-size: 15px; }
-body.light-mode .kh-ma { color: #000000; font-weight: 400; font-size: 15px; }
-body.light-mode .kh-danhso { color: #000000; font-weight: 400; font-size: 15px; }
-body.light-mode .kh-sogcs { color: #64748b; font-weight: 400; font-size: 15px; }
-body.light-mode .kh-phone { color: #64748b !important; font-weight: 400; font-size: 15px; text-decoration: none !important; }
+body.light-mode .kh-ma { color: #1e293b; font-weight: 400; font-size: 15px; }
+body.light-mode .kh-danhso { color: #1e293b; font-weight: 400; font-size: 15px; }
+body.light-mode .kh-sogcs { color: #1e293b; font-weight: 400; font-size: 15px; }
+body.light-mode .kh-phone { color: #475569 !important; font-weight: 400; font-size: 15px; text-decoration: none !important; }
 body.light-mode .kh-thang { color: #475569; font-weight: 600; font-size: 15px; }
 body.light-mode .kh-address { color: #0f172a; font-weight: 400; font-size: 15px; }
 body.light-mode .kh-addr-line { color: #475569; font-weight: 400; font-size: 15px; }
+/* dấu "-" phân cách: #94a3b8 chỉ đạt 2,3:1 trên nền thẻ sáng nên gần như mất hút */
+body.light-mode .kh-sep { color: #64748b; }
+/* emoji 🧾 và 🏢 vốn nhạt màu, trên nền sáng gần như chìm hẳn */
+body.light-mode .kh-card .kh-icon { filter: saturate(1.2) brightness(0.85); }
 body.light-mode .kh-ghichu { background: #f8fafc; border-color: #1e40af; color: #000000; font-weight: 600; }
 body.light-mode .count-info { color: #1d4ed8; font-weight: 400; margin-top: 2px; padding-top: 2px; border-top: 1px solid #e2e8f0; }
 body.light-mode #countKHBarFiltered { color: #1d4ed8 !important; }
@@ -252,23 +327,7 @@ body.light-mode .table-view .cell-ghi { color: #c2410c !important; font-weight: 
 body.light-mode .table-view .ghi-chu-table { color: #1e293b !important; font-weight: 700; border-color: #fdba74; }
 body.light-mode .ghi-chu-input { color: #1e293b !important; }
 body.light-mode .ghi-chu-input:not(:placeholder-shown) { color: #1e293b !important; }
-body.light-mode .summary-wrap { background: #ffffff; border-color: #1e40af; }
-body.light-mode .summary-table th { background: #f1f5f9; color: #1e40af; border-color: #e2e8f0; font-weight: 800; }
-body.light-mode .summary-table td { color: #000000; border-color: #e2e8f0; font-weight: 600; }
-body.light-mode .summary-table tr:hover { background: #f8fafc; }
-body.light-mode .summary-table tfoot td { color: #1e40af; font-weight: 800; background: #f1f5f9; }
-body.light-mode .summary-table .tien-no-cell { color: #dc2626; font-weight: 800; }
-body.light-mode .tien-no { font-weight: 900; }
-body.light-mode .tien-no.high { color: #dc2626; }
-body.light-mode .tien-no.low { color: #166534; }
-body.light-mode .tien-no.mid { color: #166534; }
-body.light-mode .tien-no .mil-digit { color: #dc2626; }
-body.light-mode .kh-tien { color: #dc2626; font-weight: 800; }
-body.light-mode .kh-tien.high { color: #dc2626; }
-body.light-mode .kh-tien.low { color: #1e40af; }
-body.light-mode .kh-tien .mil-digit { color: #dc2626; }
 body.light-mode .count-kh-hd { color: #2563eb; font-weight: 400; }
-body.light-mode .count-tien { color: #9a3412; font-weight: 400; }
 
 #fileInput { display: none; }
 
@@ -507,7 +566,79 @@ body.light-mode #filterNhomLabel { color: #0f172a; }
 body:not(.light-mode) #filterNhomLabel { font-weight: 400 !important; }
 .filter-select.group-selected #filterNhomLabel { font-weight: 400 !important; }
 body:not(.light-mode) .filter-select.group-selected { border: 1.5px solid var(--group-border, var(--border)); }
+body.light-mode .filter-select.group-selected { border: 1.5px solid var(--group-border, #1e40af); }
 body:not(.light-mode) .filter-select.group-selected #filterNhomLabel { color: #ffffff; }
+
+/* Chấm màu nhân viên (màu chấm cũng là màu viền nút khi chọn) */
+.nv-dot {
+  width: 11px; height: 11px;
+  border-radius: 50%;
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+#filterNhomLabel .nv-dot, #filterTramLabel .nv-dot { margin-right: 5px; }
+
+/* ── STATION FILTER ──────────────────── */
+#filterTramLabel { color: #e2e8f0; }
+body.light-mode #filterTramLabel { color: #0f172a; }
+body:not(.light-mode) #filterTramLabel { font-weight: 400 !important; }
+body:not(.light-mode) .filter-select.group-selected #filterTramLabel { color: #ffffff; }
+.tram-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 4px;
+  background: var(--navy-mid);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  z-index: 999;
+  max-height: 400px;
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+.tram-search-wrap { padding: 6px; border-bottom: 1px solid var(--border); }
+.tram-search {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px 10px;
+  font-size: 15px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: var(--text);
+  background: rgba(15,23,42,0.6);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  outline: none;
+}
+.tram-search::placeholder { color: #64748b; }
+.tram-options { overflow-y: auto; flex: 1; -webkit-overflow-scrolling: touch; }
+.tram-option {
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border-bottom: 1px solid var(--border);
+  user-select: none;
+  -webkit-user-select: none;
+}
+.tram-option:hover { background: rgba(16,185,129,0.15); }
+.tram-option.selected { background: rgba(16,185,129,0.22); }
+.tram-text { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tram-code { color: #34d399; }
+.tram-count { color: #94a3b8; font-size: 13px; flex: 0 0 auto; }
+body.light-mode .tram-dropdown { background: #ffffff; border-color: #cbd5e1; }
+body.light-mode .tram-option { color: #000000; }
+body.light-mode .tram-option:hover, body.light-mode .tram-option.selected { background: rgba(16,185,129,0.12); }
+body.light-mode .tram-search { background: #f1f5f9; color: #000000; border-color: #cbd5e1; }
+body.light-mode .tram-code { color: #047857; }
+body.light-mode .tram-count { color: #64748b; }
 
 /* Sort quick-buttons */
 .sort-row { display: flex; gap: 4px; margin-top: 0px; }
@@ -540,18 +671,15 @@ body:not(.light-mode) .filter-select.group-selected #filterNhomLabel { color: #f
 #sortDanhSo.active { border-color: #1e40af; background: #1e40af; color: #ffffff; }
 #sortMaKH.active { border-color: #166534; background: #166534; color: #ffffff; }
 #sortSoGCS.active { border-color: #9a3412; background: #9a3412; color: #ffffff; }
-#sortTenKH.active { border-color: #6b21a8; background: #6b21a8; color: #ffffff; }
-#sortDanhSo.active .sort-arrow, #sortMaKH.active .sort-arrow, #sortSoGCS.active .sort-arrow, #sortTenKH.active .sort-arrow { color: #ffffff; }
+#sortDanhSo.active .sort-arrow, #sortMaKH.active .sort-arrow, #sortSoGCS.active .sort-arrow { color: #ffffff; }
 /* Inactive per-button colors (dark mode) */
 #sortDanhSo:not(.active) { background: rgba(30,64,120,0.3); color: rgba(96,165,250,0.6); }
 #sortMaKH:not(.active) { background: rgba(22,101,52,0.3); color: rgba(74,222,128,0.6); }
 #sortSoGCS:not(.active) { background: rgba(120,53,15,0.3); color: rgba(251,146,60,0.6); }
-#sortTenKH:not(.active) { background: rgba(88,28,135,0.3); color: rgba(192,132,252,0.6); }
 /* Inactive per-button colors (light mode) */
 body.light-mode #sortDanhSo:not(.active) { background: rgba(30,64,120,0.18); color: rgba(30,64,120,0.6); border-color: rgba(30,64,120,0.3); }
 body.light-mode #sortMaKH:not(.active) { background: rgba(22,101,52,0.18); color: rgba(22,101,52,0.6); border-color: rgba(22,101,52,0.3); }
 body.light-mode #sortSoGCS:not(.active) { background: rgba(120,53,15,0.18); color: rgba(120,53,15,0.6); border-color: rgba(120,53,15,0.3); }
-body.light-mode #sortTenKH:not(.active) { background: rgba(88,28,135,0.18); color: rgba(88,28,135,0.6); border-color: rgba(88,28,135,0.3); }
 .sort-btn:active { background: rgba(59,130,246,0.22); }
 
 .count-info {
@@ -565,7 +693,6 @@ body.light-mode #sortTenKH:not(.active) { background: rgba(88,28,135,0.18); colo
 }
 .count-info span { font-weight: 400; }
 .count-info .count-kh-hd { color: #60a5fa; }
-.count-info .count-tien { color: #fdba74; }
 
 /* ── CARD LIST (mobile view) ─────────────── */
 .card-list { display: flex; flex-direction: column; gap: 6px; }
@@ -589,28 +716,39 @@ body.light-mode .kh-card.highlighted { background: rgba(0,150,255,0.1); border-c
 .kh-card, .kh-card * { font-weight: 400 !important; }
 /* All card text size 16px (light & dark) */
 .kh-card, .kh-card * { font-size: 16px !important; }
+/* Card title: bolder + a bit larger so it reads as the heading (overrides the
+   blanket "all card text 16px" rule above, which has !important) */
+.kh-card .kh-name { font-weight: 500 !important; font-size: 18px !important; }
 
 .kh-card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 4px; }
-.kh-danhso-row { display: flex; gap: 6px; align-items: center; margin-bottom: 4px; }
-.kh-danhso { font-size: 15px; color: #e2e8f0; font-weight: 400; }
+.kh-danhso-row { display: flex; gap: 1px; align-items: center; margin-bottom: 4px; }
+.kh-danhso { font-size: 15px; color: #cbd5e1; font-weight: 400; }
 .kh-name { font-size: 15px; font-weight: 400; flex: 1; line-height: 1.3; color: #60a5fa; }
-.kh-tien-col { display: flex; flex-direction: column; align-items: flex-end; flex-shrink: 0; }
-.kh-tien { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 15px; font-weight: 700; color: #ffa0a0; white-space: nowrap; flex-shrink: 0; }
-.kh-tien.low { color: #4ade80; }
-.kh-tien.mid { color: #fde68a; }
-.mil-digit { color: #ffa0a0; }
 .kh-thang { font-size: 15px; color: #94a3b8; margin-top: 2px; font-weight: 500; }
 
 .kh-ma-line { margin-bottom: 4px; }
-.kh-card-mid { display: flex; gap: 3px; flex-wrap: nowrap; margin-bottom: 5px; align-items: center; overflow: hidden; }
+.kh-card-mid { display: flex; gap: 1px; flex-wrap: nowrap; margin-bottom: 5px; align-items: center; overflow: hidden; }
+/* Station row also holds the phone number: "name - code" is one indivisible group,
+   the phone drops to a second line only when there is no room left, and the station
+   name is the only part that ever gets truncated (with an ellipsis).
+   The "-" before the phone shows only when the phone really sits on the same line —
+   otherwise it would dangle alone at the start of the next line. The .phone-same-line
+   class is set by syncPhoneSeparators(). */
+.kh-tram-row { flex-wrap: wrap; row-gap: 2px; }
+.kh-tram-main { display: flex; align-items: center; gap: 1px; min-width: 0; }
+.kh-tram-name { overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.kh-tram-phone { display: flex; align-items: center; gap: 1px; flex-shrink: 0; }
+.kh-tram-phone .kh-sep { display: none; }
+.kh-tram-row.phone-same-line .kh-tram-phone .kh-sep { display: inline; }
 .kh-phone-line { display: flex; align-items: center; gap: 3px; margin-bottom: 5px; overflow: hidden; }
-.kh-ma { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 15px; color: #e2e8f0; font-weight: 400; white-space: nowrap; }
-.kh-sogcs { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 15px; color: #94a3b8; font-weight: 400; white-space: nowrap; }
+.kh-ma { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 15px; color: #cbd5e1; font-weight: 400; white-space: nowrap; }
+.kh-sogcs { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 15px; color: #cbd5e1; font-weight: 400; white-space: nowrap; }
 .kh-phone { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 15px; color: #94a3b8; font-weight: 400; text-decoration: none; white-space: nowrap; } .kh-phone .phone-icon { color: #ef4444; margin-right: 2px; font-style: normal; }
 .kh-card-mid .badge { font-size: 15px; font-weight: 500; white-space: nowrap; }
 .kh-card-mid .badge-danhso { background: rgba(59,130,246,0.15); color: #fff; }
 .kh-ma-line .badge-danhso { font-size: 15px; padding: 3px 10px; color: #fff; border: none !important; box-shadow: none !important; }
-.kh-sep { font-size: 15px; color: var(--text-dim); font-weight: 400; }
+.kh-sep { font-size: 15px; color: var(--text-dim); font-weight: 400; margin: 0 2px; }
+.kh-icon { font-size: 15px; line-height: 1; flex-shrink: 0; }
 .kh-ghichu { font-size: 15px; color: #ffffff; font-weight: 500; white-space: nowrap; border: 1px solid rgba(253,186,116,0.25); border-radius: 3px; padding: 0px 4px; }
 .ghi-chu-input { background: rgba(71,85,105,0.35); border: 1.5px solid #fdba74; border-radius: 6px; padding: 8px 12px; color: var(--text); font-size: 15px; font-weight: 500; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; width: 100%; outline: none; }
 .ghi-chu-input:not(:placeholder-shown) { color: #4ade80; }
@@ -662,7 +800,7 @@ colgroup col:nth-child(8) { width: 9%; }  /* SĐT */
 colgroup col:nth-child(9) { width: 10%; } /* Số TBi */
 colgroup col:nth-child(10) { width: 7%; } /* Mã Trạm */
 colgroup col:nth-child(11) { width: 5%; } /* Tên Trạm */
-colgroup col:nth-child(12) { width: 3%; } /* Nhóm */
+colgroup col:nth-child(12) { width: 3%; } /* Nhân viên */
 
 thead th {
   background: #374151;
@@ -714,9 +852,6 @@ tbody td { padding: 4px 8px; font-size: 14px; font-weight: 500; vertical-align: 
 .ma-kh { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14px; color: var(--accent-glow); font-weight: 500; }
 .ten-kh { font-size: 15px; font-weight: 500; white-space: nowrap; }
 .ten-kh small { display: block; font-size: 14px; color: var(--text-dim); font-weight: 400; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.tien-no { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14px; font-weight: 700; color: #ffa0a0; white-space: nowrap; }
-.tien-no.low { color: #4ade80; }
-.tien-no.high { color: #fb923c; }
 .phone { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14px; color: #ffffff; }
 .cell-dim { color: var(--text-dim); font-size: 14px; white-space: nowrap; }
 .cell-addr { font-size: 14px; color: var(--text-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -729,7 +864,6 @@ tbody td { padding: 4px 8px; font-size: 14px; font-weight: 500; vertical-align: 
 
 /* All table text weight 400 (light & dark) */
 .table-scroll table, .table-scroll table * { font-weight: 400 !important; }
-.summary-table, .summary-table * { font-weight: 400 !important; }
 
 /* ── BADGE ──────────────────────────────── */
 .badge {
@@ -779,87 +913,6 @@ tbody td { padding: 4px 8px; font-size: 14px; font-weight: 500; vertical-align: 
 .page-btn:active { background: rgba(255,255,255,0.06); }
 .page-btn.active { background: var(--accent); border-color: var(--accent); color: white; }
 .page-btn:disabled { opacity: 0.3; cursor: not-allowed; }
-
-/* ── SUMMARY TABLE ─────────────────────── */
-.summary-wrap {
-  background: rgba(71,85,105,0.25);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
-.summary-table {
-  width: 100%;
-  min-width: 0;
-  border-collapse: collapse;
-  table-layout: fixed;
-}
-.summary-table col:nth-child(1) { width: 36px; }
-.summary-table col:nth-child(2) { width: 35%; }
-.summary-table col:nth-child(3) { width: 14%; }
-.summary-table col:nth-child(4) { width: 14%; }
-.summary-table col:nth-child(5) { width: 38%; }
-.summary-table th:nth-child(3),
-.summary-table td:nth-child(3),
-.summary-table th:nth-child(4),
-.summary-table td:nth-child(4),
-.summary-table th:nth-child(5),
-.summary-table td:nth-child(5) { text-align: right; }
-.summary-table th {
-  background: rgba(255,255,255,0.06);
-  padding: 8px 6px;
-  text-align: left;
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: #3b82f6;
-  border-bottom: 1px solid var(--border);
-  white-space: nowrap;
-  cursor: pointer;
-  user-select: none;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.summary-table th:hover { color: var(--accent-glow); }
-.summary-table th.sorted { color: var(--accent-glow); }
-.sa-sum { font-size: 14px; color: var(--text-dim); margin-left: 1px; }
-.summary-table th.sorted .sa-sum { color: var(--accent-glow); }
-.summary-table td {
-  padding: 8px 6px;
-  font-size: 14px;
-  border-bottom: 1px solid var(--border);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.summary-table td:nth-child(3),
-.summary-table td:nth-child(4) {
-  text-align: right;
-  font-variant-numeric: tabular-nums;
-  padding-right: 6px;
-}
-.summary-table tr:last-child td { border-bottom: none; }
-.summary-table tr:hover { background: rgba(255,255,255,0.03); }
-.summary-table .tien-no-cell { font-weight: 700; color: #fca5a5; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14px; }
-.summary-table .num-cell { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-weight: 600; font-size: 14px; color: var(--text); text-align: right; font-variant-numeric: tabular-nums; }
-.summary-table .ten-nv-cell { font-weight: 600; color: var(--text); font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.summary-table .stt-cell { color: var(--text-dim); font-size: 14px; }
-.summary-table tfoot td {
-  background: rgba(59,130,246,0.08);
-  font-weight: 700;
-  font-size: 14px;
-  border-top: 2px solid var(--accent);
-  color: var(--accent-glow);
-  padding: 10px 6px;
-  white-space: nowrap;
-  overflow: visible;
-}
-.summary-table tfoot td:first-child {
-  text-align: right;
-  font-size: 14px;
-  letter-spacing: 0.03em;
-}
 
 /* ── EMPTY ──────────────────────────────── */
 .empty-state { text-align: center; padding: 48px 24px; color: var(--text-dim); }
@@ -972,7 +1025,6 @@ body.light-mode mark { background: rgba(251,191,36,0.35); color: #92400e; font-w
 @media (max-width: 639.98px) {
   .filter-select { font-size: 16px; padding-top: 6px; padding-bottom: 6px; }
   .kh-name { font-size: 15px; }
-  .kh-tien { font-size: 15px; }
   .page-btn { width: 34px; height: 34px; font-size: 14px; }
   .page-btns { flex-wrap: wrap; justify-content: center; }
   .modal-close { padding: 10px 12px; font-size: 15px; }
@@ -992,7 +1044,7 @@ body.light-mode mark { background: rgba(251,191,36,0.35); color: #92400e; font-w
   .search-box { width: 100%; }
   .toolbar-top { display: flex; gap: 2px; align-items: center; }
   .toolbar-top .search-box { flex: 1 1 0; min-width: 0; max-width: none; }
-  .filter-row { flex: 0 0 calc(25% - 4.5px); max-width: calc(25% - 4.5px); min-width: 0; flex-wrap: nowrap; gap: 0; }
+  .filter-row { flex: 0 0 calc(38% - 4px); max-width: calc(38% - 4px); min-width: 0; flex-wrap: nowrap; gap: 4px; }
   .filter-select { flex: 1; min-width: 0; }
   .header-sub { max-width: 300px; }
 }
@@ -1050,13 +1102,6 @@ body.light-mode mark { background: rgba(251,191,36,0.35); color: #92400e; font-w
     <!-- Stats -->
     <div class="stats-row" style="display:none">
       <div class="stat-card">
-        <div class="stat-label">Tổng nợ</div>
-        <div class="stat-value-row">
-          <div class="stat-value gold tong-no" id="statTongNo">0</div>
-          <div class="stat-sub">VNĐ</div>
-        </div>
-      </div>
-      <div class="stat-card">
         <div class="stat-label">Tổng hoá đơn nợ</div>
         <div class="stat-value blue" id="statTotal">0</div>
       </div>
@@ -1082,12 +1127,22 @@ body.light-mode mark { background: rgba(251,191,36,0.35); color: #92400e; font-w
         </div>
         <div class="filter-row" style="position:relative">
           <div class="filter-select" id="filterNhomBtn" onclick="toggleNhomDropdown()"style="display:flex;align-items:center;gap:4px;cursor:pointer;position:relative;font-size:16px;font-weight:500">
-            <span id="filterNhomLabel" style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size: 16px;font-weight:500"><span style="color:#3b82f6">📁</span> DSKH BR theo nhóm</span>
+            <span id="filterNhomLabel" style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size: 16px;font-weight:500"><span class="nv-dot" style="background:#3b82f6"></span> Nhân viên</span>
           </div>
           <div class="nhom-dropdown" id="nhomDropdown" style="display:none;position:absolute;top:100%;left:0;right:0;margin-top:4px;background:var(--navy-mid);border:1px solid var(--border);border-radius:10px;z-index:999;max-height:400px;overflow-y:auto;box-shadow:0 8px 24px rgba(0,0,0,0.4)">
-            <div class="nhom-option" data-val="" onclick="selectNhom('')" style="padding:8px 12px;cursor:pointer;font-size:16px;font-weight:500;color:var(--text);display:flex;align-items:center;gap:6px;border-bottom:1px solid var(--border)" onmouseenter="this.style.background='rgba(59,130,246,0.15)'" onmouseleave="this.style.background=''" ><span style="color:#3b82f6">📁</span> DSKH BR theo nhóm</div>
+            <div class="nhom-option" data-val="" onclick="selectNhom('')" style="padding:8px 12px;cursor:pointer;font-size:16px;font-weight:500;color:var(--text);display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border)" onmouseenter="this.style.background='rgba(59,130,246,0.15)'" onmouseleave="this.style.background=''" ><span class="nv-dot" style="background:#3b82f6"></span> Nhân viên</div>
           </div>
           <input type="hidden" id="filterNhom" value="">
+          <div class="filter-select" id="filterTramBtn" onclick="toggleTramDropdown()" style="display:flex;align-items:center;gap:4px;cursor:pointer;position:relative;font-size:16px;font-weight:500">
+            <span id="filterTramLabel" style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:16px;font-weight:500"><span class="nv-dot" style="background:#10b981"></span> Tất cả trạm</span>
+          </div>
+          <div class="tram-dropdown" id="tramDropdown">
+            <div class="tram-search-wrap">
+              <input class="tram-search" id="tramSearch" type="text" placeholder="Tìm trạm..." autocomplete="off" oninput="filterTramOptions()">
+            </div>
+            <div class="tram-options" id="tramOptions"></div>
+          </div>
+          <input type="hidden" id="filterTram" value="">
         </div>
       </div>
         <div class="sort-row">
@@ -1099,9 +1154,6 @@ body.light-mode mark { background: rgba(251,191,36,0.35); color: #92400e; font-w
           </button>
           <button class="sort-btn" id="sortSoGCS" onclick="sortBy('ma_sogcs')">
             <span class="sort-label">Mã Sổ</span><span class="sort-arrow">↕</span>
-          </button>
-          <button class="sort-btn" id="sortTenKH" onclick="sortBy('ten_khach_hang')">
-            <span class="sort-label">Tên KH</span><span class="sort-arrow">↕</span>
           </button>
         </div>
       </div>
@@ -1151,7 +1203,7 @@ body.light-mode mark { background: rgba(251,191,36,0.35); color: #92400e; font-w
                 <th onclick="sortBy('so_tbi')">Số TBi <span class="sa" data-col="so_tbi">↕</span></th>
                 <th onclick="sortBy('ma_tram')">Mã Trạm <span class="sa" data-col="ma_tram">↕</span></th>
                 <th onclick="sortBy('ten_tram')">Tên Trạm <span class="sa" data-col="ten_tram">↕</span></th>
-                <th onclick="sortBy('ma_nhom')">Nhóm <span class="sa" data-col="ma_nhom">↕</span></th>
+                <th onclick="sortBy('nhan_vien')">Nhân viên <span class="sa" data-col="nhan_vien">↕</span></th>
               </tr>
             </thead>
             <tbody id="tableBody"></tbody>
@@ -1168,7 +1220,6 @@ body.light-mode mark { background: rgba(251,191,36,0.35); color: #92400e; font-w
     </div>
 
     </div> <!-- end detailView -->
-
 
   </div>
 </div>
@@ -1212,7 +1263,7 @@ var o=((a=s[17])==null?void 0:a[0])?Ob(e,e[_b(s[17][0].data)][0]):[];var l=vb(s[
 var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.s.r;c<=n.e.r;++c){i=Ta(c);for(f=n.s.c;f<=n.e.c;++f){r=s[f]+i;t=l?(e[c]||[])[f]:e[r];a="";if(t===undefined)continue;else if(t.F!=null){r=t.F;if(!t.f)continue;a=t.f;if(r.indexOf(":")==-1)r=r+":"+r}if(t.f!=null)a=t.f;else if(t.t=="z")continue;else if(t.t=="n"&&t.v!=null)a=""+t.v;else if(t.t=="b")a=t.v?"TRUE":"FALSE";else if(t.w!==undefined)a="'"+t.w;else if(t.v===undefined)continue;else if(t.t=="s")a="'"+t.v;else a=""+t.v;o[o.length]=r+"="+a}}return o}function xw(e,r,t){var a=t||{};var n=+!a.skipHeader;var i=e||{};var s=0,f=0;if(i&&a.origin!=null){if(typeof a.origin=="number")s=a.origin;else{var o=typeof a.origin=="string"?Oa(a.origin):a.origin;s=o.r;f=o.c}}var l;var c={s:{c:0,r:0},e:{c:f,r:s+r.length-1+n}};if(i["!ref"]){var h=Da(i["!ref"]);c.e.c=Math.max(c.e.c,h.e.c);c.e.r=Math.max(c.e.r,h.e.r);if(s==-1){s=h.e.r+1;c.e.r=s+r.length-1+n}}else{if(s==-1){s=0;c.e.r=r.length-1+n}}var u=a.header||[],d=0;r.forEach(function(e,r){rr(e).forEach(function(t){if((d=u.indexOf(t))==-1)u[d=u.length]=t;var o=e[t];var c="z";var h="";var v=Ra({c:f+d,r:s+r+n});l=Rw(i,v);if(o&&typeof o==="object"&&!(o instanceof Date)){i[v]=o}else{if(typeof o=="number")c="n";else if(typeof o=="boolean")c="b";else if(typeof o=="string")c="s";else if(o instanceof Date){c="d";if(!a.cellDates){c="n";o=fr(o)}h=a.dateNF||X[14]}else if(o===null&&a.nullError){c="e";o=0}if(!l)i[v]=l={t:c,v:o};else{l.t=c;l.v=o;delete l.w;delete l.R;if(h)l.z=h}if(h)l.z=h}})});c.e.c=Math.max(c.e.c,f+u.length-1);var v=Ta(s);if(n)for(d=0;d<u.length;++d)i[ya(d+f)+v]={t:"s",v:u[d]};i["!ref"]=Na(c);return i}function Ow(e,r){return xw(null,e,r)}function Rw(e,r,t){if(typeof r=="string"){if(Array.isArray(e)){var a=Oa(r);if(!e[a.r])e[a.r]=[];return e[a.r][a.c]||(e[a.r][a.c]={t:"z"})}return e[r]||(e[r]={t:"z"})}if(typeof r!="number")return Rw(e,Ra(r));return Rw(e,Ra({r:r,c:t||0}))}function Iw(e,r){if(typeof r=="number"){if(r>=0&&e.SheetNames.length>r)return r;throw new Error("Cannot find sheet # "+r)}else if(typeof r=="string"){var t=e.SheetNames.indexOf(r);if(t>-1)return t;throw new Error("Cannot find sheet name |"+r+"|")}else throw new Error("Cannot find sheet |"+r+"|")}function Nw(){return{SheetNames:[],Sheets:{}}}function Dw(e,r,t,a){var n=1;if(!t)for(;n<=65535;++n,t=undefined)if(e.SheetNames.indexOf(t="Sheet"+n)==-1)break;if(!t||e.SheetNames.length>=65535)throw new Error("Too many worksheets");if(a&&e.SheetNames.indexOf(t)>=0){var i=t.match(/(^.*?)(\d+)$/);n=i&&+i[2]||0;var s=i&&i[1]||t;for(++n;n<=65535;++n)if(e.SheetNames.indexOf(t=s+n)==-1)break}Jp(t);if(e.SheetNames.indexOf(t)>=0)throw new Error("Worksheet with name |"+t+"| already exists!");e.SheetNames.push(t);e.Sheets[t]=r;return t}function Fw(e,r,t){if(!e.Workbook)e.Workbook={};if(!e.Workbook.Sheets)e.Workbook.Sheets=[];var a=Iw(e,r);if(!e.Workbook.Sheets[a])e.Workbook.Sheets[a]={};switch(t){case 0:;case 1:;case 2:break;default:throw new Error("Bad sheet visibility setting "+t);}e.Workbook.Sheets[a].Hidden=t}function Pw(e,r){e.z=r;return e}function Lw(e,r,t){if(!r){delete e.l}else{e.l={Target:r};if(t)e.l.Tooltip=t}return e}function Mw(e,r,t){return Lw(e,"#"+r,t)}function Uw(e,r,t){if(!e.c)e.c=[];e.c.push({t:r,a:t||"SheetJS"})}function Bw(e,r,t,a){var n=typeof r!="string"?r:Da(r);var i=typeof r=="string"?r:Na(r);for(var s=n.s.r;s<=n.e.r;++s)for(var f=n.s.c;f<=n.e.c;++f){var o=Rw(e,s,f);o.t="n";o.F=i;delete o.v;if(s==n.s.r&&f==n.s.c){o.f=t;if(a)o.D=true}}return e}var Ww={encode_col:ya,encode_row:Ta,encode_cell:Ra,encode_range:Na,decode_col:Ca,decode_row:ka,split_cell:xa,decode_cell:Oa,decode_range:Ia,format_cell:Pa,sheet_add_aoa:Ma,sheet_add_json:xw,sheet_add_dom:Gm,aoa_to_sheet:Ua,json_to_sheet:Ow,table_to_sheet:jm,table_to_book:Xm,sheet_to_csv:yw,sheet_to_txt:Sw,sheet_to_json:Aw,sheet_to_html:Vm,sheet_to_formulae:_w,sheet_to_row_object_array:Aw,sheet_get_cell:Rw,book_new:Nw,book_append_sheet:Dw,book_set_sheet_visibility:Fw,cell_set_number_format:Pw,cell_set_hyperlink:Lw,cell_set_internal_link:Mw,cell_add_comment:Uw,sheet_set_array_formula:Bw,consts:{SHEET_VISIBLE:0,SHEET_HIDDEN:1,SHEET_VERY_HIDDEN:2}};var Hw;function zw(e){Hw=e}function Vw(e,r){var t=Hw();var a=r==null?{}:r;if(e==null||e["!ref"]==null){t.push(null);return t}var n=Da(e["!ref"]);var i=a.FS!==undefined?a.FS:",",s=i.charCodeAt(0);var f=a.RS!==undefined?a.RS:"\n",o=f.charCodeAt(0);var l=new RegExp((i=="|"?"\\|":i)+"+$");var c="",h=[];a.dense=Array.isArray(e);var u=a.skipHidden&&e["!cols"]||[];var d=a.skipHidden&&e["!rows"]||[];for(var v=n.s.c;v<=n.e.c;++v)if(!(u[v]||{}).hidden)h[v]=ya(v);var p=n.s.r;var g=false,m=0;t._read=function(){if(!g){g=true;return t.push("\ufeff")}while(p<=n.e.r){++p;if((d[p-1]||{}).hidden)continue;c=Cw(e,n,p-1,h,s,o,i,a);if(c!=null){if(a.strip)c=c.replace(l,"");if(c||a.blankrows!==false)return t.push((m++?f:"")+c)}}return t.push(null)};return t}function Gw(e,r){var t=Hw();var a=r||{};var n=a.header!=null?a.header:Bm;var i=a.footer!=null?a.footer:Wm;t.push(n);var s=Ia(e["!ref"]);a.dense=Array.isArray(e);t.push(zm(e,s,a));var f=s.s.r;var o=false;t._read=function(){if(f>s.e.r){if(!o){o=true;t.push("</table>"+i)}return t.push(null)}while(f<=s.e.r){t.push(Um(e,s,f,a));++f;break}};return t}function jw(e,r){var t=Hw({objectMode:true});if(e==null||e["!ref"]==null){t.push(null);return t}var a={t:"n",v:0},n=0,i=1,s=[],f=0,o="";var l={s:{r:0,c:0},e:{r:0,c:0}};var c=r||{};var h=c.range!=null?c.range:e["!ref"];if(c.header===1)n=1;else if(c.header==="A")n=2;else if(Array.isArray(c.header))n=3;switch(typeof h){case"string":l=Da(h);break;case"number":l=Da(e["!ref"]);l.s.r=h;break;default:l=h;}if(n>0)i=0;var u=Ta(l.s.r);var d=[];var v=0;var p=Array.isArray(e);var g=l.s.r,m=0;var b={};if(p&&!e[g])e[g]=[];var w=c.skipHidden&&e["!cols"]||[];var k=c.skipHidden&&e["!rows"]||[];for(m=l.s.c;m<=l.e.c;++m){if((w[m]||{}).hidden)continue;d[m]=ya(m);a=p?e[g][m]:e[d[m]+u];switch(n){case 1:s[m]=m-l.s.c;break;case 2:s[m]=d[m];break;case 3:s[m]=c.header[m-l.s.c];break;default:if(a==null)a={w:"__EMPTY",t:"s"};o=f=Pa(a,null,c);v=b[f]||0;if(!v)b[f]=1;else{do{o=f+"_"+v++}while(b[o]);b[f]=v;b[o]=1}s[m]=o;}}g=l.s.r+i;t._read=function(){while(g<=l.e.r){if((k[g-1]||{}).hidden)continue;var r=Tw(e,l,g,d,n,s,p,c);++g;if(r.isempty===false||(n===1?c.blankrows!==false:!!c.blankrows)){t.push(r.row);return}}return t.push(null)};return t}var Xw={to_json:jw,to_html:Gw,to_csv:Vw,set_readable:zw};if(typeof vm!=="undefined")e.parse_xlscfb=vm;e.parse_zip=Xb;e.read=iw;e.readFile=sw;e.readFileSync=sw;e.write=gw;e.writeFile=bw;e.writeFileSync=bw;e.writeFileAsync=kw;e.utils=Ww;e.writeXLSX=pw;e.writeFileXLSX=ww;e.SSF=Ve;if(typeof Xw!=="undefined")e.stream=Xw;if(typeof Ke!=="undefined")e.CFB=Ke;if(typeof require!=="undefined"){var $w=undefined;if(($w||{}).Readable)zw($w.Readable)}}if(typeof exports!=="undefined")make_xlsx_lib(exports);else if(typeof module!=="undefined"&&module.exports)make_xlsx_lib(module.exports);else if(typeof define==="function"&&define.amd)define("xlsx",function(){if(!XLSX.version)make_xlsx_lib(XLSX);return XLSX});else make_xlsx_lib(XLSX);if(typeof window!=="undefined"&&!window.XLSX)try{window.XLSX=XLSX}catch(e){}
 </script>
 <script>
-let allData = [], filtered = [], summaryData = [];
+let allData = [], filtered = [];
 let nvScope = '';
 let sortCol = 'ma_khach_hang', sortDir = 1;
 let currentPage = 1;
@@ -1321,8 +1372,7 @@ async function saveData() {
   const payload = {
     name: document.getElementById('fileLabel').textContent,
     fileName: originalFileName,
-    data: allData,
-    summary: summaryData
+    data: allData
   };
   try {
     const json = JSON.stringify(payload);
@@ -1392,7 +1442,6 @@ async function restoreData() {
   if (!saved || !Array.isArray(saved.data) || saved.data.length === 0) return;
   allData = saved.data;
   rebuildSearchIndex(allData);
-  summaryData = saved.summary || [];
   originalFileName = saved.fileName || 'DSKH.xlsx';
   document.getElementById('fileLabel').textContent = (saved.name || '').replace(/\s*·\s*[\d.,]+\s*bản ghi/, '') || originalFileName;
 
@@ -1401,8 +1450,6 @@ async function restoreData() {
   document.getElementById('dataView').style.display = 'block';
   document.getElementById('exportBtn').style.display = 'flex';
   loadGhiChu(); initFilters(); updateStats(); applyFilters(); updateNotesCount(allData);
-  if (!summaryData.length) computeSummaryFromDetail();
-  else renderSummary();
 }
 
 const nhomColors = {
@@ -1416,29 +1463,6 @@ function getBadge(nhom) {
   return nhomColors[nhom.substring(0,4)] || 'badge-gray';
 }
 
-function fmt(n) {
-  if (!n || isNaN(n)) return '0';
-  return Math.round(n).toLocaleString('vi-VN');
-}
-function fmtHtml(n) {
-  const s = fmt(n);
-  // For amounts 1,000,000 - 1,999,999: highlight the millions digit
-  if (n >= 1000000 && n < 2000000 && s.length > 0) {
-    return '<span class="mil-digit">' + s.charAt(0) + '</span>' + s.slice(1);
-  }
-  return s;
-}
-
-// Parse amounts that may arrive as text in VN format: "1.234.567" or "1.234,56"
-function parseVnNumber(s) {
-  if (typeof s === 'number') return isNaN(s) ? 0 : s;
-  s = String(s ?? '').trim();
-  if (!s) return 0;
-  if (s.includes(',')) s = s.replace(/\./g, '').replace(/,/g, '.');
-  else s = s.replace(/\./g, '');
-  const n = parseFloat(s);
-  return isNaN(n) ? 0 : n;
-}
 // HTML-escape data coming from Excel before injecting into the page
 function esc(s) {
   return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -1446,7 +1470,7 @@ function esc(s) {
 // Lowercase without Vietnamese diacritics, for tolerant searching
 function normVn(s) { return String(s).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase(); }
 function buildSearchHaystack(r) {
-  return normVn((r.stt||'')+(r.ma_khach_hang||'')+(r.ten_khach_hang||'')+(r.dia_chi||'')+(r.ma_sogcs||'')+(r.danh_so||'')+(r.dien_thoai||'')+(r.thang_no||'')+(r.so_tbi||'')+(r.ghi_chu||'')+(r.nhan_vien||'')+(r.dinh_vi||''));
+  return normVn((r.stt||'')+(r.ma_khach_hang||'')+(r.ten_khach_hang||'')+(r.dia_chi||'')+(r.ma_sogcs||'')+(r.danh_so||'')+(r.dien_thoai||'')+(r.thang_no||'')+(r.so_tbi||'')+(r.ghi_chu||'')+(r.nhan_vien||'')+(r.ma_nhom||'')+(r.ma_tram||'')+(r.ten_tram||'')+(r.dinh_vi||''));
 }
 function rebuildSearchIndex(arr) { for (let i = 0; i < arr.length; i++) arr[i]._search = buildSearchHaystack(arr[i]); }
 function hi(text, q) {
@@ -1504,8 +1528,9 @@ function processFile(file) {
   document.querySelector('.stats-row').classList.remove('collapsed');
   document.getElementById('nvScope').classList.remove('collapsed');
   document.getElementById('filterNhom').value = '';
-  document.getElementById('filterNhomLabel').innerHTML = '<span style="color:#3b82f6">📁</span> DSKH BR theo nhóm';
+  document.getElementById('filterNhomLabel').innerHTML = '<span class="nv-dot" style="background:#3b82f6"></span> Nhân viên';
   resetNhomButton();
+  resetTramUI();
   updateSortButtons();
   document.querySelectorAll('.sa').forEach(el => { el.textContent = '↕'; el.closest('th').classList.remove('sorted'); });
 
@@ -1538,7 +1563,6 @@ function processFile(file) {
       const cDanhSo= fc('DANH SỐ','DANH SO','DANHSO');
       const cDt    = fc('DTHOAI_DVU','DTHOAIDVU','SĐT','SDT','DIEN THOAI');
       const cThang = fc('THANG NO','THANGNO','THANG_NO','THANG');
-      const cTien  = fc('TIEN NO','TIENNO','TIEN_NO','TIỀN NỢ');
       const cSoTbi = fc('SO_TBI','SOTBI','SO TBI');
       const cGhiChu= fc('GHI CHU','GHICHU','GHI CHÚ');
       const cNV    = fc('NV','NHAN VIEN','NHANVIEN');
@@ -1557,11 +1581,10 @@ const cDinhVi= fc('DINH VI','DINHVI','ĐỊNH VỊ','DINH_VI','DINHVI_TOA_DO');
         ma_sogcs: String(r[cSoGcs]||'').trim(),
         danh_so: String(r[cDanhSo]||'').trim(),
         thang_no: String(r[cThang]||'').trim(),
-        tien_no: parseVnNumber(r[cTien]),
         dien_thoai: String(r[cDt]||'').trim().replace(/\.0$/,''),
         so_tbi: String(r[cSoTbi]||'').trim(),
         ghi_chu: String(r[cGhiChu]||'').trim(),
-        nhan_vien: String(r[cNV]||'').trim(),
+        nhan_vien: String(r[cNV]||'').trim() || String(r[cMaNhom]||r[cNhom]||'').trim(),
         ma_nhom: String(r[cMaNhom]||r[cNhom]||'').trim(),
         so_pha: String(r[cSoPha]||'').trim(),
         ma_tram: String(r[cMaTram]||'').trim(),
@@ -1571,37 +1594,6 @@ const cDinhVi= fc('DINH VI','DINHVI','ĐỊNH VỊ','DINH_VI','DINHVI_TOA_DO');
       rebuildSearchIndex(allData);
 
       document.getElementById('fileLabel').textContent = file.name;
-
-      // Read Sheet 2 (summary)
-      summaryData = [];
-      if (wb.SheetNames.length > 1) {
-        const ws2 = wb.Sheets[wb.SheetNames[1]];
-        const rows2 = XLSX.utils.sheet_to_json(ws2, {defval:''});
-        const keys2 = Object.keys(rows2[0] || {});
-        function fc2(...names) {
-          for (const n of names) {
-            const f = keys2.find(k =>
-              k.trim().toUpperCase()===n.toUpperCase() ||
-              k.replace(/[_\s]/g,'').toUpperCase()===n.replace(/[_\s]/g,'').toUpperCase()
-            );
-            if (f) return f;
-          }
-          return null;
-        }
-        const sStt = fc2('STT');
-        const sNhom = fc2('NHÓM','NHOM','TÊN NHÓM','TEN NHOM');
-        const sHd = fc2('HOÁ ĐƠN','HOA DON','HÓA ĐƠN','HOADON');
-        const sKh = fc2('KHÁCH HÀNG','KHACH HANG','KHACHHANG');
-        const sTien = fc2('TIỀN NỢ','TIEN NO','TIENNO','TIEN_NỢ');
-        summaryData = rows2.map(r => ({
-          stt: String(r[sStt]||'').trim(),
-          ten_nhom: String(r[sNhom]||'').trim(),
-          hoa_don: parseVnNumber(r[sHd]),
-          khach_hang: parseVnNumber(r[sKh]),
-          tien_no: parseVnNumber(r[sTien]),
-        })).filter(r => r.ten_nhom);
-        renderSummary();
-      }
 
       loadGhiChu(); initFilters(); updateStats(); applyFilters(); updateNotesCount(allData);
       saveData();
@@ -1620,79 +1612,6 @@ const cDinhVi= fc('DINH VI','DINHVI','ĐỊNH VỊ','DINH_VI','DINHVI_TOA_DO');
     document.getElementById('welcomeState').style.display = 'block';
   };
   reader.readAsArrayBuffer(file);
-}
-
-// ── COMPUTE SUMMARY FROM DETAIL (Sheet 1) ──
-function computeSummaryFromDetail() {
-  const map = {};
-  allData.forEach(r => {
-    const nv = r.nhan_vien || r.ma_nhom || 'Không rõ';
-    if (!map[nv]) map[nv] = { ten_nhom: nv, hoa_don: 0, khach_hang: new Set(), tien_no: 0 };
-    map[nv].hoa_don++;
-    map[nv].khach_hang.add(r.ma_khach_hang);
-    map[nv].tien_no += r.tien_no;
-  });
-  summaryData = Object.values(map)
-    .map((r, i) => ({ stt: i + 1, ten_nhom: r.ten_nhom, hoa_don: r.hoa_don, khach_hang: r.khach_hang.size, tien_no: r.tien_no }))
-    .sort((a, b) => b.tien_no - a.tien_no);
-  summaryData.forEach((r, i) => r.stt = i + 1);
-  renderSummary();
-}
-
-// ── SORT SUMMARY ──
-let sumSortCol = 'tien_no', sumSortDir = -1;
-function sortSummary(col) {
-  if (sumSortCol === col) sumSortDir *= -1; else { sumSortCol = col; sumSortDir = col === 'ten_nhom' ? 1 : -1; }
-  summaryData.sort((a, b) => {
-    let av = a[col], bv = b[col];
-    if (typeof av === 'string') return av.localeCompare(bv, 'vi') * sumSortDir;
-    return (av - bv) * sumSortDir;
-  });
-  summaryData.forEach((r, i) => r.stt = i + 1);
-  document.querySelectorAll('.sa-sum').forEach(el => {
-    const c = el.dataset.col;
-    el.textContent = c === sumSortCol ? (sumSortDir === 1 ? '↑' : '↓') : '↕';
-    el.closest('th').classList.toggle('sorted', c === sumSortCol);
-  });
-  renderSummaryBody();
-}
-
-// ── RENDER SUMMARY (Sheet 2) ──
-function renderSummary() {
-  if (summaryData.length && sumSortCol === 'tien_no' && sumSortDir === -1) {
-    summaryData.sort((a, b) => b.tien_no - a.tien_no);
-    summaryData.forEach((r, i) => r.stt = i + 1);
-  }
-  renderSummaryBody();
-}
-
-function abbreviateName(name) {
-  const parts = name.trim().split(/\s+/);
-  return parts.length > 1
-    ? parts.slice(0, -1).map(w => w[0]).join('') + ' ' + parts[parts.length - 1]
-    : name;
-}
-
-function renderSummaryBody() {
-  const tbody = document.getElementById('summaryBody');
-  const tfoot = document.getElementById('summaryFoot');
-  if (!summaryData.length) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-dim);padding:24px">Không có dữ liệu sheet 2</td></tr>'; tfoot.style.display = 'none'; return; }
-  let totalHd = 0, totalKh = 0, totalTien = 0;
-  tbody.innerHTML = summaryData.map((r, i) => {
-    totalHd += r.hoa_don;
-    totalKh += r.khach_hang;
-    totalTien += r.tien_no;
-    return `<tr>
-      <td class="ten-nv-cell">${esc(abbreviateName(r.ten_nhom))}</td>
-      <td class="num-cell">${r.hoa_don.toLocaleString('vi-VN')}</td>
-      <td class="num-cell">${r.khach_hang.toLocaleString('vi-VN')}</td>
-      <td class="tien-no-cell" style="text-align:right">${fmt(r.tien_no)}</td>
-    </tr>`;
-  }).join('');
-  tfoot.style.display = '';
-  document.getElementById('sumTotalHd').textContent = totalHd.toLocaleString('vi-VN');
-  document.getElementById('sumTotalKh').textContent = totalKh.toLocaleString('vi-VN');
-  document.getElementById('sumTotalTien').textContent = fmt(totalTien);
 }
 
 let notesTabActive = false;
@@ -1723,15 +1642,30 @@ function toggleNhomDropdown() {
   const dd = document.getElementById('nhomDropdown');
   dd.style.display = dd.style.display === 'none' ? 'block' : 'none';
 }
+/* Bảng màu chấm nhân viên (đậm, rõ khác biệt) */
+const NHOM_PALETTE = ['#3b82f6', '#22c55e', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#06b6d4'];
+let nhomColorMap = {};
 function nhomColor(name) {
-  if (!name) return '#3b82f6';
+  if (!name) return NHOM_PALETTE[0];
+  if (nhomColorMap[name]) return nhomColorMap[name];
   let h = 0;
   for (let i = 0; i < name.length; i++) h = name.charCodeAt(i) + ((h << 5) - h);
-  const hue = ((h % 360) + 360) % 360;
-  return `hsl(${hue}, 70%, 65%)`;
+  return NHOM_PALETTE[Math.abs(h) % NHOM_PALETTE.length];
 }
-function nhomBorderColor() {
-  return `hsl(${Math.floor(Math.random() * 360)}, 65%, 55%)`;
+/* Màu chấm trạm (theo thứ tự danh sách trạm) */
+let tramColorMap = {};
+function tramColor(ma) {
+  if (!ma) return '#10b981';
+  return tramColorMap[ma] || '#10b981';
+}
+/* Rút gọn tên nhân viên: chữ cái đầu các từ + tên gọi (vd: Bùi Thanh Dũng → BT Dũng) */
+function shortNvName(name) {
+  const s = String(name || '').trim();
+  if (!s) return '';
+  const parts = s.split(/\s+/);
+  if (parts.length < 3) return s;
+  const initials = parts.slice(0, -1).map(w => w.charAt(0).toUpperCase()).join('');
+  return initials + ' ' + parts[parts.length - 1];
 }
 function resetNhomButton() {
   const btn = document.getElementById('filterNhomBtn');
@@ -1743,11 +1677,11 @@ function selectNhom(val) {
   const btn = document.getElementById('filterNhomBtn');
   const c = val ? nhomColor(val) : '#3b82f6';
   label.innerHTML = val
-    ? `<span style="color:${c}">👨‍💼</span> ` + val
-    : '<span style="color:#3b82f6">📁</span> DSKH BR theo nhóm';
+    ? `<span class="nv-dot" style="background:${c}"></span> ` + shortNvName(val)
+    : '<span class="nv-dot" style="background:#3b82f6"></span> Nhân viên';
   if (val) {
     btn.classList.add('group-selected');
-    btn.style.setProperty('--group-border', nhomBorderColor());
+    btn.style.setProperty('--group-border', c);
   } else {
     resetNhomButton();
   }
@@ -1764,21 +1698,158 @@ function selectNhom(val) {
   handleNhomFilter();
 }
 function initFilters() {
-  const nhomSet = [...new Set(allData.map(r=>r.ma_nhom).filter(Boolean))].sort();
+  const nhomSet = [...new Set(allData.map(r=>r.nhan_vien || r.ma_nhom).filter(Boolean))].sort();
+  // Gán màu theo thứ tự danh sách để mỗi nhân viên một màu đậm, dễ phân biệt
+  nhomColorMap = {};
+  nhomSet.forEach((v, i) => { nhomColorMap[v] = NHOM_PALETTE[i % NHOM_PALETTE.length]; });
   const dd = document.getElementById('nhomDropdown');
   // keep the first option (Tất cả)
-  dd.innerHTML = '<div class="nhom-option" data-val="" style="padding:8px 12px;cursor:pointer;font-size:16px;font-weight:500;color:var(--text);display:flex;align-items:center;gap:6px;border-bottom:1px solid var(--border);user-select:none;-webkit-user-select:none" onmouseenter="this.style.background=\'rgba(59,130,246,0.15)\'" onmouseleave="this.style.background=\'\'" ><span style="color:#3b82f6">📁</span> DSKH BR theo nhóm</div>';
+  dd.innerHTML = '<div class="nhom-option" data-val="" style="padding:8px 12px;cursor:pointer;font-size:16px;font-weight:500;color:var(--text);display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border);user-select:none;-webkit-user-select:none" onmouseenter="this.style.background=\'rgba(59,130,246,0.15)\'" onmouseleave="this.style.background=\'\'" ><span class="nv-dot" style="background:#3b82f6"></span> Nhân viên</div>';
   nhomSet.forEach(v => {
     const d = document.createElement('div');
     d.className = 'nhom-option';
     d.setAttribute('data-val', v);
-    d.style.cssText = 'padding:8px 12px;cursor:pointer;font-size:16px;font-weight:500;color:var(--text);display:flex;align-items:center;gap:6px;border-bottom:1px solid var(--border);user-select:none;-webkit-user-select:none';
+    const c = nhomColor(v);
+    d.style.cssText = 'padding:8px 12px;cursor:pointer;font-size:16px;font-weight:500;color:var(--text);display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border);user-select:none;-webkit-user-select:none';
     d.onmouseenter = function(){ this.style.background='rgba(59,130,246,0.15)'; };
     d.onmouseleave = function(){ this.style.background=''; };
-    d.innerHTML = `<span style="color:${nhomColor(v)}">👨‍💼</span> ` + v;
+    d.setAttribute('title', v);
+    d.innerHTML = `<span class="nv-dot" style="background:${c}"></span> ` + shortNvName(v);
     dd.appendChild(d);
   });
+  buildTramDropdown();
 }
+
+/* ── Station filter ───────────────────── */
+function buildTramDropdown() {
+  const box = document.getElementById('tramOptions');
+  if (!box) return;
+  const map = new Map();
+  allData.forEach(r => {
+    const ma = String(r.ma_tram || '').trim();
+    if (!ma) return;
+    const ten = String(r.ten_tram || '').trim();
+    let e = map.get(ma);
+    if (!e) { e = { ma: ma, ten: ten, n: 0 }; map.set(ma, e); }
+    if (!e.ten && ten) e.ten = ten;
+    e.n++;
+  });
+  const list = [...map.values()].sort((a, b) =>
+    (a.ten || '').localeCompare(b.ten || '', 'vi') || a.ma.localeCompare(b.ma));
+  // Gán màu theo thứ tự danh sách trạm để mỗi trạm một màu chấm rõ khác biệt
+  tramColorMap = {};
+  list.forEach((t, i) => { tramColorMap[t.ma] = NHOM_PALETTE[i % NHOM_PALETTE.length]; });
+  box.innerHTML = '';
+  const add = (val, code, name, count, color) => {
+    const d = document.createElement('div');
+    d.className = 'tram-option';
+    d.setAttribute('data-val', val);
+    d.setAttribute('data-ten', name);
+    d.setAttribute('data-q', normVn(code + ' ' + name));
+    const ic = document.createElement('span');
+    ic.className = 'nv-dot';
+    ic.style.background = color;
+    d.appendChild(ic);
+    const txt = document.createElement('div');
+    txt.className = 'tram-text';
+    if (code) {
+      const c = document.createElement('span');
+      c.className = 'tram-code';
+      c.textContent = code;
+      txt.appendChild(c);
+      if (name) txt.appendChild(document.createTextNode(' - ' + name));
+    } else {
+      txt.textContent = name;
+    }
+    d.appendChild(txt);
+    if (count) {
+      const n = document.createElement('span');
+      n.className = 'tram-count';
+      n.textContent = count.toLocaleString('vi-VN');
+      d.appendChild(n);
+    }
+    box.appendChild(d);
+  };
+  add('', '', 'Tất cả trạm', allData.length, '#10b981');
+  list.forEach(t => add(t.ma, t.ma, t.ten, t.n, tramColor(t.ma)));
+  // Không có dữ liệu trạm (file khác) → ẩn hẳn bộ lọc này
+  const btn = document.getElementById('filterTramBtn');
+  if (btn) btn.style.display = list.length ? 'flex' : 'none';
+  resetTramUI();
+  markTramSelected();
+}
+function markTramSelected() {
+  const box = document.getElementById('tramOptions');
+  if (!box) return;
+  const cur = document.getElementById('filterTram').value;
+  [...box.children].forEach(el => el.classList.toggle('selected', !!cur && el.getAttribute('data-val') === cur));
+}
+function resetTramUI() {
+  const inp = document.getElementById('filterTram');
+  const label = document.getElementById('filterTramLabel');
+  const btn = document.getElementById('filterTramBtn');
+  if (!inp || !label || !btn) return;
+  inp.value = '';
+  label.innerHTML = '<span class="nv-dot" style="background:#10b981"></span> Tất cả trạm';
+  btn.classList.remove('group-selected');
+  btn.style.removeProperty('--group-border');
+}
+function toggleTramDropdown() {
+  const dd = document.getElementById('tramDropdown');
+  const nhomDd = document.getElementById('nhomDropdown');
+  const willOpen = dd.style.display !== 'flex';
+  if (willOpen && nhomDd) nhomDd.style.display = 'none';
+  dd.style.display = willOpen ? 'flex' : 'none';
+  if (!willOpen) return;
+  const inp = document.getElementById('tramSearch');
+  if (inp) inp.value = '';
+  filterTramOptions();
+  const cur = document.getElementById('filterTram').value;
+  if (cur) {
+    const el = [...document.getElementById('tramOptions').children].find(c => c.getAttribute('data-val') === cur);
+    if (el) el.scrollIntoView({ block: 'center' });
+  }
+}
+function filterTramOptions() {
+  const box = document.getElementById('tramOptions');
+  if (!box) return;
+  const q = normVn((document.getElementById('tramSearch').value || '').trim());
+  [...box.children].forEach(el => {
+    const qk = el.getAttribute('data-q') || '';
+    el.style.display = (!q || qk.includes(q)) ? '' : 'none';
+  });
+}
+function selectTram(val) {
+  document.getElementById('filterTram').value = val;
+  const label = document.getElementById('filterTramLabel');
+  const btn = document.getElementById('filterTramBtn');
+  if (val) {
+    const el = [...document.getElementById('tramOptions').children].find(c => c.getAttribute('data-val') === val);
+    const ten = el ? el.getAttribute('data-ten') : '';
+    const c = tramColor(val);
+    label.innerHTML = `<span class="nv-dot" style="background:${c}"></span> ` + esc(val) + (ten ? ' - ' + esc(ten) : '');
+    btn.classList.add('group-selected');
+    btn.style.setProperty('--group-border', c);
+  } else {
+    resetTramUI();
+  }
+  markTramSelected();
+  document.getElementById('tramDropdown').style.display = 'none';
+  handleFilter();
+}
+document.addEventListener('click', function(e) {
+  const dd = document.getElementById('tramDropdown');
+  const btn = document.getElementById('filterTramBtn');
+  if (!dd || !btn) return;
+  const option = e.target.closest('.tram-option');
+  if (option && dd.contains(option)) {
+    e.stopPropagation();
+    selectTram(option.getAttribute('data-val') || '');
+    return;
+  }
+  if (!dd.contains(e.target) && !btn.contains(e.target)) dd.style.display = 'none';
+});
+
 document.addEventListener('click', function(e) {
   const dd = document.getElementById('nhomDropdown');
   const btn = document.getElementById('filterNhomBtn');
@@ -1795,19 +1866,19 @@ document.addEventListener('click', function(e) {
 
 function updateStats() {
   const nhom = document.getElementById('filterNhom').value;
+  const tram = document.getElementById('filterTram').value;
   // Mirror applyFilters: apply group AND employee scope together
   const src = allData.filter(r => {
     if (nhom === '__notes__') {
       if (!(r.ghi_chu && r.ghi_chu.trim()) && !(r.dinh_vi && r.dinh_vi.trim())) return false;
-    } else if (nhom && r.ma_nhom !== nhom) return false;
+    } else if (nhom && (r.nhan_vien || r.ma_nhom) !== nhom) return false;
     if (nvScope && r.nhan_vien !== nvScope) return false;
+    if (tram && String(r.ma_tram || '').trim() !== tram) return false;
     return true;
   });
   const total = src.length;
   const unique = new Set(src.map(r=>r.ma_khach_hang)).size;
-  const tongNo = src.reduce((s,r)=>s+r.tien_no,0);
   document.getElementById('statTotal').textContent = total.toLocaleString('vi-VN');
-  document.getElementById('statTongNo').textContent = fmt(tongNo);
   document.getElementById('statUnique').textContent = unique.toLocaleString('vi-VN');
   // Update count bar between sort buttons and cards
   const countBar = document.getElementById('countInfoBar');
@@ -1823,19 +1894,19 @@ function updateStats() {
       const searchFiltered = src.filter(r => {
         if (/^\d+$/.test(q)) {
           const tail6 = s => { const d = (s||'').replace(/\D/g,''); return d.slice(-6); };
-          return [r.ma_khach_hang, r.ma_sogcs, r.danh_so, r.dien_thoai, r.so_tbi].some(f => tail6(f) === q);
+          return [r.ma_khach_hang, r.ma_sogcs, r.danh_so, r.dien_thoai, r.so_tbi, r.ma_tram].some(f => tail6(f) === q);
         }
         return r._search && r._search.includes(q);
       });
       searchUnique = new Set(searchFiltered.map(r=>r.ma_khach_hang)).size;
     }
-    if (q && (nvScope || nhom)) {
+    if (q && (nvScope || nhom || tram)) {
       countBarFiltered.textContent = searchUnique.toLocaleString('vi-VN') + ' KH / ' + unique.toLocaleString('vi-VN') + ' KH / ';
       countBarTotal.textContent = 'Tổng ' + totalAll.toLocaleString('vi-VN') + ' KH';
     } else if (q) {
       countBarFiltered.textContent = searchUnique.toLocaleString('vi-VN') + ' KH / ';
       countBarTotal.textContent = 'Tổng ' + totalAll.toLocaleString('vi-VN') + ' KH';
-    } else if (nvScope || nhom) {
+    } else if (nvScope || nhom || tram) {
       countBarFiltered.textContent = unique.toLocaleString('vi-VN') + ' KH / ';
       countBarTotal.textContent = 'Tổng ' + totalAll.toLocaleString('vi-VN') + ' KH';
     } else {
@@ -1884,16 +1955,18 @@ function handleFilter() { currentPage=1; applyFilters(); }
 function applyFilters() {
   const q = normVn(document.getElementById('searchInput').value);
   const nhom = document.getElementById('filterNhom').value;
+  const tram = document.getElementById('filterTram').value;
 
   filtered = allData.filter(r => {
     if (nhom === '__notes__') {
       if (!(r.ghi_chu && r.ghi_chu.trim()) && !(r.dinh_vi && r.dinh_vi.trim())) return false;
-    } else if (nhom && r.ma_nhom !== nhom) return false;
+    } else if (nhom && (r.nhan_vien || r.ma_nhom) !== nhom) return false;
     if (nvScope && r.nhan_vien !== nvScope) return false;
+    if (tram && String(r.ma_tram || '').trim() !== tram) return false;
     if (q) {
       if (/^\d+$/.test(q)) {
         const tail6 = s => { const d = (s||'').replace(/\D/g,''); return d.slice(-6); };
-        const match = [r.ma_khach_hang, r.ma_sogcs, r.danh_so, r.dien_thoai, r.so_tbi].some(f => tail6(f) === q);
+        const match = [r.ma_khach_hang, r.ma_sogcs, r.danh_so, r.dien_thoai, r.so_tbi, r.ma_tram].some(f => tail6(f) === q);
         if (!match) return false;
       } else {
         if (r._search && !r._search.includes(q)) return false;
@@ -1915,11 +1988,7 @@ function applyFilters() {
     return String(av).localeCompare(String(bv),'vi')*sortDir;
   });
 
-  // Group by ma_khach_hang in detail tab: sum tien_no per customer
-  // Calculate stats BEFORE grouping (to get original invoice count)
-  const origInvoiceCount = filtered.length;
-  const origUniqueKH = new Set(filtered.map(r => r.ma_khach_hang || r.ten_khach_hang));
-  const origTongTien = filtered.reduce((sum, r) => sum + (r.tien_no || 0), 0);
+  // Group by ma_khach_hang in detail tab (one row per customer)
 
   {
     const groupMap = {};
@@ -1927,10 +1996,9 @@ function applyFilters() {
     filtered.forEach(r => {
       const key = r.ma_khach_hang || r.ten_khach_hang || ('_row_' + Math.random());
       if (!groupMap[key]) {
-        groupMap[key] = { ...r, tien_no: 0, _count: 0 };
+        groupMap[key] = { ...r, _count: 0 };
         groupOrder.push(key);
       }
-      groupMap[key].tien_no += r.tien_no;
       groupMap[key]._count++;
       // Merge thang_no for grouped display
       if (r.thang_no && groupMap[key].thang_no !== r.thang_no) {
@@ -1983,16 +2051,25 @@ function renderSingleCard(r, idx, q='') {
         <div class="kh-name" onclick="showDetail(${idx})" style="cursor:pointer">${hi(r.ten_khach_hang,q)||'—'}</div>
       </div>
       <div class="kh-danhso-row">
+        ${(r.danh_so || r.ma_khach_hang) ? `<span class="kh-icon">🧾</span>` : ''}
         ${r.danh_so ? `<span class="kh-danhso">${hi(r.danh_so,q)}</span>` : ''}
         ${r.danh_so && r.ma_khach_hang ? `<span class="kh-sep">-</span>` : ''}
-        ${r.ma_khach_hang ? `<span class="kh-ma">${hi(r.ma_khach_hang,q)}</span>` : ''}
+        ${r.ma_khach_hang ? `<span class="kh-icon">🆔</span><span class="kh-ma">${hi(r.ma_khach_hang,q)}</span>` : ''}
       </div>
       <div class="kh-card-mid">
+        ${(r.ma_sogcs || r.so_tbi) ? `<span class="kh-icon">📘</span>` : ''}
         ${r.ma_sogcs ? `<span class="kh-sogcs">${hi(r.ma_sogcs,q)}</span>` : ''}
         ${r.ma_sogcs && r.so_tbi ? `<span class="kh-sep">-</span>` : ''}
-        ${r.so_tbi ? `<span class="kh-sogcs">${hi(r.so_tbi,q)}</span>` : ''}
+        ${r.so_tbi ? `<span class="kh-icon">🔢</span><span class="kh-sogcs">${hi(r.so_tbi,q)}</span>` : ''}
       </div>
-      ${phone ? `<div class="kh-phone-line"><a class="kh-phone" href="tel:${phone.replace(/[^0-9+]/g,'')}" onclick="event.stopPropagation()"><svg class='phone-icon' width='11' height='11' viewBox='0 0 24 24' fill='#ef4444' style='vertical-align:middle;margin-right:2px'><path d='M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24c1.12.37 2.33.57 3.57.57a1 1 0 011 1V20a1 1 0 01-1 1C10.07 21 3 13.93 3 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.45.57 3.57a1 1 0 01-.25 1.02l-2.2 2.2z'/></svg> ${hi(phone,q)}</a></div>` : ''}
+      ${(r.ma_tram || r.ten_tram || phone) ? `<div class="kh-card-mid kh-tram-row">
+        <span class="kh-tram-main">
+          ${r.ten_tram ? `<span class="kh-icon">🏢</span><span class="kh-sogcs kh-tram-name">${hi(r.ten_tram,q)}</span>` : ''}
+          ${r.ma_tram && r.ten_tram ? `<span class="kh-sep">-</span>` : ''}
+          ${r.ma_tram ? `<span class="kh-icon">⚡</span><span class="kh-sogcs">${hi(r.ma_tram,q)}</span>` : ''}
+        </span>
+        ${phone ? `<span class="kh-tram-phone">${(r.ma_tram || r.ten_tram) ? `<span class="kh-sep">-</span>` : ''}<a class="kh-phone" href="tel:${phone.replace(/[^0-9+]/g,'')}" onclick="event.stopPropagation()"><svg class='phone-icon' width='11' height='11' viewBox='0 0 24 24' fill='#ef4444' style='vertical-align:middle;margin-right:2px'><path d='M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24c1.12.37 2.33.57 3.57.57a1 1 0 011 1V20a1 1 0 01-1 1C10.07 21 3 13.93 3 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.45.57 3.57a1 1 0 01-.25 1.02l-2.2 2.2z'/></svg>${hi(phone,q)}</a></span>` : ''}
+      </div>` : ''}
 
       ${r.dia_chi ? `<div class="kh-addr-line"><a class="addr-link" href="${mapsUrl(r)}" target="_blank" onclick="event.stopPropagation()">📍 ${hi(cardAddr(r.dia_chi),q)}</a></div>` : ''}
       ${r.dinh_vi ? `<div class="kh-addr-line" style="color:#22c55e;font-size:14px;font-weight:400;margin-top:2px"><a class="addr-link" href="https://www.google.com/maps?q=${encodeURIComponent(r.dinh_vi)}" target="_blank" onclick="event.stopPropagation()" style="color:#22c55e">🎯 ${hi(r.dinh_vi,q)}<span class="addr-map-icon" style="font-size:14px">🗺</span></a></div>` : ''}
@@ -2010,7 +2087,24 @@ function renderCards(q='') {
   empty.style.display='none';
 
   list.innerHTML = pageData.map((r,i) => renderSingleCard(r, start+i, q)).join('');
+  syncPhoneSeparators();
 }
+
+// Show the "-" before the phone only when it shares a line with the station code.
+function syncPhoneSeparators() {
+  const rows = [...document.querySelectorAll('.kh-card .kh-tram-row')];
+  const sameLine = rows.map(row => {
+    const main = row.querySelector('.kh-tram-main'), phone = row.querySelector('.kh-tram-phone');
+    if (!main || !phone) return false;
+    return Math.abs(main.getBoundingClientRect().top - phone.getBoundingClientRect().top) < 3;
+  });
+  rows.forEach((row, i) => row.classList.toggle('phone-same-line', sameLine[i]));
+}
+let _tramSyncTimer = null;
+window.addEventListener('resize', () => {
+  clearTimeout(_tramSyncTimer);
+  _tramSyncTimer = setTimeout(syncPhoneSeparators, 120);
+});
 
 // TABLE (desktop)
 function renderTable(q='') {
@@ -2023,7 +2117,8 @@ function renderTable(q='') {
   empty.style.display='none';
 
   tbody.innerHTML = pageData.map((r,i) => {
-    const nc = r.ma_nhom ? nhomColor(r.ma_nhom) : '';
+    const emp = r.nhan_vien || r.ma_nhom;
+    const nc = emp ? nhomColor(emp) : '';
     return `<tr onclick="showDetail(${start+i})">
       <td style="color:var(--text-dim);font-size:15px;white-space:nowrap">${r.stt ? hi(r.stt,q) : (start+i+1)}</td>
       <td><span class="ma-kh">${hi(r.ma_khach_hang,q)}</span></td>
@@ -2036,7 +2131,7 @@ function renderTable(q='') {
       <td class="cell-dim">${hi(r.so_tbi,q)||'—'}</td>
       <td class="cell-dim" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:80px">${hi(r.ma_tram,q)||'—'}</td>
       <td class="cell-dim" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:80px">${hi(r.ten_tram,q)||'—'}</td>
-      <td><span class="badge" style="${nc?`background:${nc}22;color:${nc};border:1px solid ${nc}44`:''}">${hi(r.ma_nhom,q)||'—'}</span></td>
+      <td><span class="badge" style="${nc?`background:${nc}22;color:${nc};border:1px solid ${nc}44`:''}">${hi(emp,q)||'—'}</span></td>
 
     </tr>`;
   }).join('');
@@ -2145,7 +2240,7 @@ function showDetail(idx) {
     ['Mã trạm', esc(r.ma_tram)||'—', 1],
     ['Tên trạm', esc(r.ten_tram)||'—', 1],
     ['Ghi chú', `<input type="text" class="ghi-chu-input ghi-chu-field" value="${esc(r.ghi_chu||'')}" data-ma="${esc(r.ma_khach_hang)}" placeholder="Nhập ghi chú..." oninput="saveGhiChu(this)">`],
-    ['Nhóm', r.ma_nhom ? `<span class="badge" style="background:${nhomColor(r.ma_nhom)}22;color:${nhomColor(r.ma_nhom)};border:1px solid ${nhomColor(r.ma_nhom)}44">${esc(r.ma_nhom)}</span>` : '—'],
+    ['Nhân viên', (r.nhan_vien || r.ma_nhom) ? `<span class="badge" style="background:${nhomColor(r.nhan_vien || r.ma_nhom)}22;color:${nhomColor(r.nhan_vien || r.ma_nhom)};border:1px solid ${nhomColor(r.nhan_vien || r.ma_nhom)}44">${esc(r.nhan_vien || r.ma_nhom)}</span>` : '—'],
   ];
 
   document.getElementById('modalBody').innerHTML = rows.map(([l,v,d]) =>
@@ -2316,10 +2411,6 @@ function exportExcel() {
   const ws = XLSX.utils.json_to_sheet(exportRows);
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, 'DSKH');
-  if (summaryData.length) {
-    const ws2 = XLSX.utils.json_to_sheet(summaryData);
-    XLSX.utils.book_append_sheet(wb, ws2, 'TongHop');
-  }
   const fname = originalFileName.endsWith('.xlsx') ? originalFileName : originalFileName + '.xlsx';
   XLSX.writeFile(wb, fname);
 }
@@ -2349,7 +2440,7 @@ function handleNhomFilter() {
 function clearNvScope() {
   nvScope = '';
   document.getElementById('filterNhom').value = '';
-  document.getElementById('filterNhomLabel').innerHTML = '<span style="color:#3b82f6">📁</span> DSKH BR theo nhóm';
+  document.getElementById('filterNhomLabel').innerHTML = '<span class="nv-dot" style="background:#3b82f6"></span> Nhân viên';
   resetNhomButton();
   handleFilter();
   window.scrollTo({top:0, behavior:'smooth'});

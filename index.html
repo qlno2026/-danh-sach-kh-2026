@@ -14,6 +14,8 @@
   --navy: #0e0f12;
   --navy-mid: #17191e;
   --navy-light: #131519;
+  --header-bg: #102a43;
+  --header-border: rgba(59,130,246,0.5);
   --accent: #3b82f6;
   --accent-glow: #60a5fa;
   --gold: #f59e0b;
@@ -28,9 +30,10 @@
   --card: #16181c;
   --surface: #16181c;
   --surface-2: #1c1f24;
+  --card-bg: #0e2135;
   --radius: 10px;
   --header-h: 44px;
-  --header-h-mobile: 68px;
+  --header-h-mobile: 54px;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -46,9 +49,13 @@ body {
   transition: background-color 0.5s ease, color 0.4s ease;
 }
 
-/* ── HEADER ─────────────────────────────── */.header { background: var(--surface);
-  border-bottom: 1px solid var(--border);
-  transition: background 0.4s ease, border-color 0.4s ease;
+/* ── HEADER ─────────────────────────────── */
+/* Không đổ bóng ngoài: thay bằng cặp cạnh sáng trên / tối dưới + viền đáy đậm
+   để header đọc như một khối đặc, tách hẳn khỏi nội dung bên dưới. */
+.header { background: var(--header-bg);
+  border-bottom: 2px solid var(--header-border);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.16), inset 0 -1px 0 rgba(96,165,250,0.30);
+  transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
   height: calc(var(--header-h) + env(safe-area-inset-top, 0px));
   padding: env(safe-area-inset-top, 0px) 16px 0;
   display: flex;
@@ -73,11 +80,11 @@ body {
   flex-shrink: 0;
 }
 
-.header-title { font-size: 17px; font-weight: 600; letter-spacing: -0.01em; color: var(--text); }
-.header-sub { font-size: 12px; color: var(--text-dim); margin-top: 4px; overflow: hidden; text-overflow: ellipsis; max-width: 200px; }
+.header-title { font-size: 18px; font-weight: 600; letter-spacing: -0.01em; color: var(--text); }
+.header-sub { font-size: 13px; color: var(--text-dim); margin-top: 2px; overflow: hidden; text-overflow: ellipsis; max-width: 260px; }
 .header-clock { display: flex; flex-direction: column; align-items: center; position: absolute; right: 12px; top: 50%; transform: translateY(-50%); white-space: nowrap; z-index: 210; }
-.header-clock .clock-time { font-size: 17px; font-weight: 600; color: var(--text); line-height: 1.2; }
-.header-clock .clock-date { font-size: 12px; font-weight: 400; color: var(--text-dim); margin-top: 2px; text-align: center; }
+.header-clock .clock-time { font-size: 18px; font-weight: 600; color: var(--text); line-height: 1.2; }
+.header-clock .clock-date { font-size: 13px; font-weight: 400; color: var(--text-dim); margin-top: 2px; text-align: center; }
 body.light-mode .header-clock .clock-time { color: var(--text); }
 body.light-mode .header-clock .clock-date { color: var(--text-dim); }
 
@@ -119,8 +126,8 @@ body.light-mode .action-btn { background: transparent; color: var(--text); borde
   .header { height: auto; min-height: var(--header-h-mobile); padding: 2px 14px; align-items: center; justify-content: space-between; }
   .upload-btn-header { padding: 4px 8px; font-size: 11px; gap: 3px; }
   .header-right { gap: 2px; flex-direction: column; }
-  .header-title { font-size: 16px; }
-  .header-sub { font-size: 11px; max-width: none; white-space: normal; line-height: 1.3; }
+  .header-title { font-size: 17px; }
+  .header-sub { font-size: 12px; max-width: none; white-space: normal; line-height: 1.3; }
   .header-left { gap: 6px; }
   .header-right .upload-btn-header { width: 100%; justify-content: center; }
   .main { padding: 0 14px; }
@@ -162,47 +169,78 @@ body.light-mode .theme-toggle-img { border-radius: 50%; }
 /* Nút Cài đặt nằm ở thanh đếm "Tổng ... KH" — neo menu vào đó */
 .settings-wrap { position: relative; display: flex; align-items: center; flex-shrink: 0; }
 /* Nút to hơn + viền rõ để trông ra dáng một nút bấm (--border quá mờ nên dùng --card-border) */
-.count-info .settings-btn { width: 34px; height: 34px; border: 1.5px solid var(--card-border); }
+.count-info .settings-btn { width: 34px; height: 34px; border-radius: 9px; border: 1.5px solid var(--card-border); box-shadow: 0 3px 10px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06); transition: box-shadow 0.2s ease, border-color 0.2s ease; }
+.count-info .settings-btn:hover { box-shadow: 0 5px 16px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.06); }
 .count-info .settings-btn .icon-svg { width: 18px; height: 18px; }
 body.light-mode .count-info .settings-btn { background: #ffffff; border: 1.5px solid var(--card-border); }
 .settings-btn.has-alert { border-color: var(--accent); color: var(--accent); background: rgba(59,130,246,0.14); }
+/* Bảng cài đặt: bottom sheet dán đáy màn hình, trượt lên khi mở */
 .settings-menu {
-  position: absolute;
-  top: calc(100% + 8px);
-  right: 0;
-  min-width: 244px;
+  position: fixed;
+  left: 50%;
+  bottom: 0;
+  right: auto;
+  top: auto;
+  transform: translate(-50%, 100%);
+  width: min(520px, 100%);
+  max-width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
   background: var(--navy-mid);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 6px;
-  box-shadow: 0 14px 36px rgba(0,0,0,0.45);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-bottom: none;
+  border-radius: 18px 18px 0 0;
+  padding: 14px 8px calc(8px + env(safe-area-inset-bottom, 0px));
+  box-shadow: 0 -18px 50px rgba(0,0,0,0.6), 0 -6px 16px rgba(0,0,0,0.45), 0 0 0 1px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
   z-index: 500;
-  display: none;
+  display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
+  visibility: hidden;
+  opacity: 0;
+  transition: transform 0.28s ease, opacity 0.28s ease, visibility 0s linear 0.28s;
 }
-.settings-menu.open { display: flex; }
+/* Tay nắm nhỏ ở đỉnh sheet để thấy rõ đây là panel trượt lên */
+.settings-menu::before {
+  content: "";
+  align-self: center;
+  width: 40px; height: 4px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.22);
+  margin: -2px 0 6px;
+  flex-shrink: 0;
+}
+body.light-mode .settings-menu::before { background: rgba(15,23,42,0.18); }
+.settings-menu.open {
+  transform: translate(-50%, 0);
+  visibility: visible;
+  opacity: 1;
+  transition: transform 0.28s ease, opacity 0.28s ease, visibility 0s;
+}
 .settings-menu-title {
-  font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
-  color: var(--text-dim); padding: 6px 10px 4px;
+  font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--text-dim); padding: 8px 12px 6px;
 }
 .settings-item {
-  display: flex; align-items: center; gap: 10px;
-  padding: 9px 10px;
-  border-radius: 9px;
+  display: flex; align-items: center; gap: 9px;
+  padding: 12px 12px;
+  border-radius: 11px;
   cursor: pointer;
   color: var(--text);
-  font-size: 15px; font-weight: 500;
+  font-size: 17px; font-weight: 500;
   user-select: none; -webkit-user-select: none;
-  transition: background 0.15s ease;
+  border: 1px solid transparent;
+  transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
 }
-.settings-item:hover { background: rgba(59,130,246,0.15); }
+.settings-item:hover { background: rgba(59,130,246,0.15); border-color: rgba(96,165,250,0.35); box-shadow: 0 3px 12px rgba(0,0,0,0.3); }
 .settings-item:active { background: rgba(59,130,246,0.25); }
-.settings-item .icon-svg { width: 17px; height: 17px; }
-.settings-item-label { flex: 1; }
+.settings-item .icon-svg { width: 20px; height: 20px; }
+.settings-item-label { flex: 1; white-space: nowrap; }
 .settings-item.active { color: var(--accent); }
 .settings-item.active .icon-svg { color: var(--accent); }
-.settings-sep { height: 1px; background: var(--border); margin: 4px 6px; }
+.settings-sep { height: 1px; background: var(--border); margin: 6px 8px; }
 .settings-stepper { display: flex; align-items: center; gap: 4px; }
 .stepper-btn {
   width: 26px; height: 26px; border-radius: 7px;
@@ -212,18 +250,50 @@ body.light-mode .count-info .settings-btn { background: #ffffff; border: 1.5px s
   font-family: inherit; padding: 0;
 }
 .stepper-btn:active { opacity: 0.6; }
-.stepper-val { min-width: 44px; text-align: center; font-size: 13px; font-weight: 700; color: var(--text-dim); }
-body.light-mode .settings-menu { background: var(--surface); box-shadow: 0 14px 36px rgba(15,23,42,0.18); }
+.stepper-val { min-width: 42px; text-align: right; font-size: 14px; font-weight: 700; color: var(--text-dim); }
+
+/* ── THANH KÉO (5 mức) cho Cỡ chữ / Độ sáng ── */
+.settings-slider-wrap { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.settings-slider {
+  -webkit-appearance: none; appearance: none;
+  width: 84px; height: 6px; border-radius: 999px;
+  background: var(--border); outline: none; cursor: pointer; margin: 0;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.55), inset 0 0 0 1px rgba(0,0,0,0.35);
+}
+.settings-slider::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 18px; height: 18px; border-radius: 50%;
+  background: var(--accent); cursor: pointer;
+  border: 2px solid var(--surface); box-sizing: border-box;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.55), 0 0 0 3px rgba(59,130,246,0.16);
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+.settings-slider::-moz-range-thumb {
+  width: 18px; height: 18px; border-radius: 50%;
+  background: var(--accent); cursor: pointer;
+  border: 2px solid var(--surface); box-sizing: border-box;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.55), 0 0 0 3px rgba(59,130,246,0.16);
+}
+.settings-slider:active::-webkit-slider-thumb { transform: scale(1.15); box-shadow: 0 3px 10px rgba(0,0,0,0.6), 0 0 0 4px rgba(59,130,246,0.28); }
+.settings-slider:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+
+body.light-mode .settings-menu { background: var(--surface); border-color: var(--border); box-shadow: 0 -18px 50px rgba(15,23,42,0.22), 0 -6px 16px rgba(15,23,42,0.14), inset 0 1px 0 rgba(255,255,255,0.6); }
 body.light-mode .stepper-btn { background: #ffffff; }
 
-/* Logo trang trí trên header (thay cho nút đổi giao diện đã chuyển vào Cài đặt) */
+/* Logo trên header dùng làm nút đổi giao diện Sáng / Tối */
 .logo-badge {
-  width: 34px; height: 34px; border-radius: 50%;
+  width: 36px; height: 36px; border-radius: 50%;
   border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
   overflow: visible; flex-shrink: 0;
   display: flex; align-items: center; justify-content: center;
   color: var(--text);
+  transition: opacity 0.15s ease, transform 0.15s ease;
 }
+.logo-badge:hover { opacity: 0.75; }
+.logo-badge:active { opacity: 0.55; transform: scale(0.94); }
 /* Logo: vòng tròn + ngôi sao 4 cánh vẽ bằng nét currentColor nên tự đúng màu ở cả chế độ sáng/tối */
 .logo-badge .logo-svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; display: block; }
 
@@ -272,6 +342,7 @@ body.light-mode {
   --card: #ffffff;
   --surface: #ffffff;
   --surface-2: #f7f8fa;
+  --card-bg: #e8f1fb;
   --text: #101114;
   --text-dim: #6b7280;
   --card-sub: #475569;
@@ -280,7 +351,15 @@ body.light-mode {
   background: #ffffff;
   color: #101114;
 }
-body.light-mode .header { background: var(--surface); border-bottom: 1px solid var(--border); }
+/* Header luôn mang tông tối của dark mode, kể cả khi trang ở chế độ Sáng.
+   Đặt lại bảng màu ngay trên .header để mọi phần tử con (dùng var(--text)/
+   var(--text-dim)/var(--border)) tự động sáng chữ trên nền tối. */
+body.light-mode .header {
+  --text: #e6e8eb;
+  --text-dim: #8b93a1;
+  --border: rgba(255,255,255,0.14);
+  color: #e6e8eb;
+}
 body.light-mode .header-title { color: var(--text); font-weight: 600; }
 body.light-mode .header-sub { color: var(--text-dim); font-weight: 400; }
 body.light-mode .logo-icon { display: none; }
@@ -296,13 +375,13 @@ body.light-mode .nhom-dropdown { background: var(--surface) !important; border-c
 body.light-mode .nhom-option { color: var(--text) !important; border-bottom: 1px solid var(--border) !important; background: var(--surface) !important; font-weight: 500 !important; }
 body.light-mode .nhom-option:hover { background: rgba(59,130,246,0.1) !important; }
 body.light-mode .toolbar { background: #f6f7f9; border-bottom-color: var(--border); }
-body.light-mode .sort-btn { background: #ffffff; color: var(--text-dim); border-color: var(--border); font-weight: 500; }
+body.light-mode .sort-btn { background: var(--card-bg); color: var(--text-dim); border-color: var(--border); font-weight: 500; }
 body.light-mode .sort-btn.active { background: var(--accent); color: #ffffff; }
 body.light-mode #sortDanhSo.active,
 body.light-mode #sortMaKH.active,
 body.light-mode #sortSoGCS.active { background: var(--accent); }
 /* Nền card light mode: xám nhạt dịu mắt thay vì trắng tuyệt đối */
-body.light-mode .kh-card { background: #f6f7f9; border: 1.5px solid var(--card-border); font-size: 15px; }
+body.light-mode .kh-card { background: var(--card-bg); border: 1.5px solid var(--card-border); font-size: 15px; }
 /* Đồng bộ tông xám nhạt (#f6f7f9) của card cho toolbar, bảng, modal (light mode).
    Control trên nền xám đổi sang trắng để tách lớp rõ. */
 body.light-mode .sticky-region { background: #f6f7f9; }
@@ -310,7 +389,7 @@ body.light-mode .filter-row { background: transparent; }
 body.light-mode .search-box,
 body.light-mode .search-box input { background-color: #ffffff; }
 body.light-mode .filter-select { background-color: #ffffff; }
-body.light-mode .sort-btn { background-color: #ffffff; }
+body.light-mode .sort-btn { background-color: var(--card-bg); }
 body.light-mode .table-wrap { background: #f6f7f9; }
 body.light-mode table thead th,
 body.light-mode table thead tr,
@@ -690,7 +769,7 @@ body.light-mode .tram-count { color: var(--text-dim); }
   align-items: center;
   justify-content: center;
   gap: 4px;
-  background: var(--surface-2);
+  background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 6px 4px;
@@ -716,11 +795,11 @@ body.light-mode .tram-count { color: var(--text-dim); }
 /* Inactive per-button colors (dark mode) */
 #sortDanhSo:not(.active),
 #sortMaKH:not(.active),
-#sortSoGCS:not(.active) { background: var(--surface-2); color: var(--text-dim); }
+#sortSoGCS:not(.active) { background: var(--card-bg); color: var(--text-dim); }
 /* Inactive per-button colors (light mode) */
 body.light-mode #sortDanhSo:not(.active),
 body.light-mode #sortMaKH:not(.active),
-body.light-mode #sortSoGCS:not(.active) { background: var(--surface-2); color: var(--text-dim); border-color: var(--border); }
+body.light-mode #sortSoGCS:not(.active) { background: var(--card-bg); color: var(--text-dim); border-color: var(--border); }
 .sort-btn:active { background: rgba(59,130,246,0.22); }
 
 .count-info {
@@ -740,7 +819,7 @@ body.light-mode #sortSoGCS:not(.active) { background: var(--surface-2); color: v
 
 .kh-card {
   font-size: 15px;
-  background: var(--surface);
+  background: var(--card-bg);
   border: 1.5px solid var(--card-border);
   border-radius: 10px;
   padding: 10px 14px;
@@ -807,6 +886,27 @@ body.light-mode .kh-card.highlighted { background: #eef0f3; border-color: var(--
 /* Dòng Định vị (toạ độ GPS): chữ xanh dương đồng bộ với icon ghim, theo quy ước màu xanh của app (sáng tối dùng sắc khác nhau cho đủ tương phản) */
 .kh-dinhvi-line { font-size: 14px; font-weight: 400; margin-top: 2px; color: var(--accent-glow); }
 body.light-mode .kh-dinhvi-line { color: var(--accent); }
+
+/* ── MỨC NỀN THẺ & TAB (5 mức, đồng bộ) ───
+   Thẻ (.kh-card) và tab sắp xếp (.sort-btn) đều đọc chung biến --card-bg,
+   nên chỉ cần đổi --card-bg theo mức là cả hai tự khớp nhau.
+   Mỗi mức trộn màu nhấn vào nền trang (--navy) nên tự đúng cho cả chế độ
+   Sáng lẫn Tối, và màu chữ vẫn theo chủ đề trang nên luôn đủ tương phản. */
+body.cards-l0 { --card-bg: color-mix(in srgb, var(--accent) 4%, var(--navy)); }
+body.cards-l1 { --card-bg: color-mix(in srgb, var(--accent) 8%, var(--navy)); }
+body.cards-l2 { --card-bg: color-mix(in srgb, var(--accent) 13%, var(--navy)); }
+body.cards-l3 { --card-bg: color-mix(in srgb, var(--accent) 19%, var(--navy)); }
+body.cards-l4 { --card-bg: color-mix(in srgb, var(--accent) 26%, var(--navy)); }
+
+/* Áp mức đã chọn cho cả thẻ lẫn tab để hai bên luôn đồng bộ */
+body[class*="cards-l"] .kh-card { background: var(--card-bg); }
+body[class*="cards-l"] .kh-card:active,
+body[class*="cards-l"] .kh-card.highlighted { border-color: var(--accent); }
+body[class*="cards-l"] .sort-btn:not(.active),
+body[class*="cards-l"] #sortDanhSo:not(.active),
+body[class*="cards-l"] #sortMaKH:not(.active),
+body[class*="cards-l"] #sortSoGCS:not(.active) { background: var(--card-bg); }
+
 .addr-link { color: inherit; text-decoration: none; cursor: pointer; }
 .addr-link:hover { text-decoration: underline; }
 .addr-map-icon { font-size: 15px; margin-left: 3px; opacity: 0.7; }
@@ -1109,7 +1209,7 @@ body.light-mode mark { background: rgba(59,130,246,0.18); color: #1d4ed8; font-w
 
 /* Desktop: table */
 @media (min-width: 640px) {
-  :root { --header-h: 56px; }
+  :root { --header-h: 46px; }
   .header { height: calc(var(--header-h) + env(safe-area-inset-top, 0px)); }
   .card-view { display: none; }
   .table-view { display: block; }
@@ -1158,6 +1258,7 @@ body.light-mode mark { background: rgba(59,130,246,0.18); color: #1d4ed8; font-w
 <symbol id="i-logo" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 4.7Q12 12 19.3 12Q12 12 12 19.3Q12 12 4.7 12Q12 12 12 4.7Z"/></symbol>
 <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></symbol>
 <symbol id="i-type" viewBox="0 0 24 24"><path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/></symbol>
+<symbol id="i-layout" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="7" rx="2"/><rect x="3" y="14" width="18" height="6" rx="2"/></symbol>
 </svg>
 
 <!-- Login screen removed -->
@@ -1165,7 +1266,7 @@ body.light-mode mark { background: rgba(59,130,246,0.18); color: #1d4ed8; font-w
 <!-- HEADER -->
 <div class="header">
   <div class="header-left">
-    <div class="logo-badge"><svg class="logo-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#i-logo"/></svg></div>
+    <button type="button" class="logo-badge" onclick="toggleTheme()" title="Chế độ sáng / tối" aria-label="Chuyển chế độ sáng / tối"><svg class="logo-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#i-logo"/></svg></button>
     <div>
       <div class="header-title">Tổng DSKH 2026</div>
       <div class="header-sub" id="fileLabel">Chưa có dữ liệu</div>
@@ -1290,19 +1391,25 @@ body.light-mode mark { background: rgba(59,130,246,0.18); color: #1d4ed8; font-w
           <div class="settings-item">
             <svg class="icon-svg"><use href="#i-type"/></svg>
             <span class="settings-item-label">Cỡ chữ</span>
-            <div class="settings-stepper">
-              <button class="stepper-btn" onclick="stepFontSize(-1)" aria-label="Giảm cỡ chữ">−</button>
-              <span class="stepper-val" id="fontSizeVal">100%</span>
-              <button class="stepper-btn" onclick="stepFontSize(1)" aria-label="Tăng cỡ chữ">+</button>
+            <div class="settings-slider-wrap">
+              <input class="settings-slider" id="fontSizeSlider" type="range" min="0" max="4" step="1" value="2" oninput="setFontStep(this.value)" aria-label="Cỡ chữ">
+              <span class="stepper-val" id="fontSizeVal">Chuẩn</span>
             </div>
           </div>
           <div class="settings-item">
             <svg class="icon-svg"><use href="#i-sun"/></svg>
             <span class="settings-item-label">Độ sáng</span>
-            <div class="settings-stepper">
-              <button class="stepper-btn" onclick="stepBrightness(-1)" aria-label="Giảm độ sáng">−</button>
-              <span class="stepper-val" id="brightnessVal">100%</span>
-              <button class="stepper-btn" onclick="stepBrightness(1)" aria-label="Tăng độ sáng">+</button>
+            <div class="settings-slider-wrap">
+              <input class="settings-slider" id="brightnessSlider" type="range" min="0" max="4" step="1" value="3" oninput="setBrightStep(this.value)" aria-label="Độ sáng">
+              <span class="stepper-val" id="brightnessVal">Sáng</span>
+            </div>
+          </div>
+          <div class="settings-item" title="Chỉnh độ đậm nền thẻ và tab sắp xếp (5 mức, luôn đồng bộ)">
+            <svg class="icon-svg"><use href="#i-layout"/></svg>
+            <span class="settings-item-label">Màu nền</span>
+            <div class="settings-slider-wrap">
+              <input class="settings-slider" id="cardsBgSlider" type="range" min="0" max="4" step="1" value="2" oninput="setCardsBgStep(this.value)" aria-label="Màu nền">
+              <span class="stepper-val" id="cardsBgVal">Chuẩn</span>
             </div>
           </div>
         </div>
@@ -1498,6 +1605,7 @@ function toggleTheme() {
   document.body.classList.toggle('light-mode');
   const isLight = document.body.classList.contains('light-mode');
   localStorage.setItem('qlno_theme', isLight ? 'light' : 'dark');
+  // Thẻ & tab dùng chung biến --card-bg nên tự đổi theo chủ đề trang, không cần đồng bộ lại.
 }
 
 // Restore theme on load
@@ -1506,6 +1614,41 @@ function toggleTheme() {
   if (saved === 'light') {
     document.body.classList.add('light-mode');
   }
+})();
+
+// ── MỨC NỀN THẺ & TAB (5 mức, đồng bộ) ──
+// Đổi một mức là cả thẻ lẫn tab sắp xếp hợp nhất về cùng tông nền.
+// Tên 5 mức, đồng bộ cách gọi với "Cỡ chữ" / "Độ sáng".
+const CARDS_BG_LABELS = ['Rất nhạt', 'Nhạt', 'Chuẩn', 'Đậm', 'Rất đậm'];
+let cardsBgStepIdx = 2; // 'Chuẩn'
+function applyCardsBgStep() {
+  const b = document.body;
+  for (let i = 0; i < CARDS_BG_LABELS.length; i++) {
+    b.classList.toggle('cards-l' + i, i === cardsBgStepIdx);
+  }
+  const v = document.getElementById('cardsBgVal');
+  if (v) v.textContent = CARDS_BG_LABELS[cardsBgStepIdx];
+  const s = document.getElementById('cardsBgSlider');
+  if (s) s.value = String(cardsBgStepIdx);
+}
+function setCardsBgStep(v) {
+  cardsBgStepIdx = Math.min(CARDS_BG_LABELS.length - 1, Math.max(0, parseInt(v, 10) || 0));
+  applyCardsBgStep();
+  try { localStorage.setItem('qlno_cardsbg', String(cardsBgStepIdx)); } catch (e) {}
+}
+(function restoreCardsBgStep() {
+  try {
+    const s = parseInt(localStorage.getItem('qlno_cardsbg'), 10);
+    if (!isNaN(s) && s >= 0 && s < CARDS_BG_LABELS.length) {
+      cardsBgStepIdx = s;
+    } else {
+      // Di trú từ công tắc cũ (Sáng/Tối) một lần, nếu người dùng đã từng bật
+      const old = localStorage.getItem('qlno_cardsmode');
+      if (old === 'light') cardsBgStepIdx = 1;
+      else if (old === 'dark') cardsBgStepIdx = 4;
+    }
+  } catch (e) {}
+  applyCardsBgStep();
 })();
 
 // ── SETTINGS MENU ─────────────────────────
@@ -1536,10 +1679,13 @@ document.addEventListener('keydown', function(e) {
 });
 
 // ── UI PREFS: cỡ chữ + độ sáng (lưu qua localStorage) ──
-const FONT_STEPS = [0.8, 0.9, 1, 1.1, 1.25, 1.4];
-const BRIGHT_STEPS = [0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2];
+const FONT_STEPS = [0.8, 0.9, 1, 1.15, 1.3];      // 5 mức
+const BRIGHT_STEPS = [0.6, 0.75, 0.9, 1, 1.15];   // 5 mức
+// Tên 5 mức hiển thị thay cho % (dạng: rất …, …, chuẩn, …, rất …)
+const FONT_LABELS = ['Rất nhỏ', 'Nhỏ', 'Chuẩn', 'Lớn', 'Rất lớn'];
+const BRIGHT_LABELS = ['Rất tối', 'Tối', 'Chuẩn', 'Sáng', 'Rất sáng'];
 let fontStepIdx = 2;   // 100%
-let brightStepIdx = 5; // 100%
+let brightStepIdx = 3; // 100%
 function applyUiPrefs() {
   const fs = FONT_STEPS[fontStepIdx];
   const br = BRIGHT_STEPS[brightStepIdx];
@@ -1549,16 +1695,20 @@ function applyUiPrefs() {
   document.documentElement.style.filter = br === 1 ? '' : 'brightness(' + br + ')';
   const fv = document.getElementById('fontSizeVal');
   const bv = document.getElementById('brightnessVal');
-  if (fv) fv.textContent = Math.round(fs * 100) + '%';
-  if (bv) bv.textContent = Math.round(br * 100) + '%';
+  if (fv) fv.textContent = FONT_LABELS[fontStepIdx];
+  if (bv) bv.textContent = BRIGHT_LABELS[brightStepIdx];
+  const fsr = document.getElementById('fontSizeSlider');
+  const bsr = document.getElementById('brightnessSlider');
+  if (fsr) fsr.value = String(fontStepIdx);
+  if (bsr) bsr.value = String(brightStepIdx);
 }
-function stepFontSize(dir) {
-  fontStepIdx = Math.min(FONT_STEPS.length - 1, Math.max(0, fontStepIdx + dir));
+function setFontStep(v) {
+  fontStepIdx = Math.min(FONT_STEPS.length - 1, Math.max(0, parseInt(v, 10) || 0));
   applyUiPrefs();
   try { localStorage.setItem('qlno_fontstep', String(fontStepIdx)); } catch (e) {}
 }
-function stepBrightness(dir) {
-  brightStepIdx = Math.min(BRIGHT_STEPS.length - 1, Math.max(0, brightStepIdx + dir));
+function setBrightStep(v) {
+  brightStepIdx = Math.min(BRIGHT_STEPS.length - 1, Math.max(0, parseInt(v, 10) || 0));
   applyUiPrefs();
   try { localStorage.setItem('qlno_brightstep', String(brightStepIdx)); } catch (e) {}
 }
@@ -1566,8 +1716,8 @@ function stepBrightness(dir) {
   try {
     const f = parseInt(localStorage.getItem('qlno_fontstep'), 10);
     const b = parseInt(localStorage.getItem('qlno_brightstep'), 10);
-    if (!isNaN(f)) fontStepIdx = Math.min(FONT_STEPS.length - 1, Math.max(0, f));
-    if (!isNaN(b)) brightStepIdx = Math.min(BRIGHT_STEPS.length - 1, Math.max(0, b));
+    if (!isNaN(f) && f >= 0 && f < FONT_STEPS.length) fontStepIdx = f;
+    if (!isNaN(b) && b >= 0 && b < BRIGHT_STEPS.length) brightStepIdx = b;
   } catch (e) {}
   applyUiPrefs();
 })();

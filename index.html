@@ -19,6 +19,8 @@
   --accent: #3b82f6;
   --accent-glow: #60a5fa;
   --gold: #f59e0b;
+  /* Màu icon riêng cho thẻ khách hàng (cam) — đậm hơn ở nền sáng, sáng hơn ở nền tối */
+  --card-icon: #fb923c;
   --red: #ef4444;
   --green: #10b981;
   --text: #e6e8eb;
@@ -256,7 +258,7 @@ body.light-mode .settings-menu::before { background: rgba(15,23,42,0.18); }
 .settings-slider-wrap { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
 .settings-slider {
   -webkit-appearance: none; appearance: none;
-  width: 84px; height: 6px; border-radius: 999px;
+  width: 200px; height: 6px; border-radius: 999px;
   background: var(--border); outline: none; cursor: pointer; margin: 0;
   box-shadow: inset 0 1px 2px rgba(0,0,0,0.55), inset 0 0 0 1px rgba(0,0,0,0.35);
 }
@@ -276,6 +278,11 @@ body.light-mode .settings-menu::before { background: rgba(15,23,42,0.18); }
 }
 .settings-slider:active::-webkit-slider-thumb { transform: scale(1.15); box-shadow: 0 3px 10px rgba(0,0,0,0.6), 0 0 0 4px rgba(59,130,246,0.28); }
 .settings-slider:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+/* Màn hình hẹp: thu thanh kéo lại để nhãn ("Độ sáng"…) không bị ép chữ */
+@media (max-width: 620px) { .settings-slider { width: 150px; } }
+@media (max-width: 400px) { .settings-slider { width: 108px; } }
+/* Rất hẹp (≤360px) + nhãn dài nhất ("Rất sáng"/"Rất nhạt") vẫn phải vừa một dòng */
+@media (max-width: 360px) { .settings-slider { width: 96px; } }
 
 body.light-mode .settings-menu { background: var(--surface); border-color: var(--border); box-shadow: 0 -18px 50px rgba(15,23,42,0.22), 0 -6px 16px rgba(15,23,42,0.14), inset 0 1px 0 rgba(255,255,255,0.6); }
 body.light-mode .stepper-btn { background: #ffffff; }
@@ -342,7 +349,8 @@ body.light-mode {
   --card: #ffffff;
   --surface: #ffffff;
   --surface-2: #f7f8fa;
-  --card-bg: #e8f1fb;
+  --card-bg: #f2f2f2;
+  --card-icon: #ea580c;
   --text: #101114;
   --text-dim: #6b7280;
   --card-sub: #475569;
@@ -875,6 +883,11 @@ body.light-mode .kh-card.highlighted { background: #eef0f3; border-color: var(--
 /* Icon nằm trên nền xanh đậm (nút tải file, tab sắp xếp đang chọn) phải giữ màu trắng nếu không sẽ mất hình. */
 .big-upload-btn .icon-svg,
 .sort-btn.active .icon-svg { color: #ffffff; }
+/* Icon trong thẻ khách hàng đổi sang màu cam cho nổi hơn trên nền thẻ (nét hơi đậm hơn). */
+.kh-card .icon-svg { color: var(--card-icon); stroke-width: 2.2; }
+/* Icon trên nền xanh đậm trong thẻ (nếu có) vẫn phải là màu trắng */
+.kh-card .big-upload-btn .icon-svg,
+.kh-card .sort-btn.active .icon-svg { color: #ffffff; }
 .welcome-state .big-icon svg { width: 28px; height: 28px; opacity: .9; }
 .empty-state .icon svg { width: 22px; height: 22px; opacity: .65; }
 .kh-ghichu { font-size: 15px; color: #ffffff; font-weight: 500; white-space: nowrap; border: 1px solid var(--border); border-radius: 3px; padding: 0px 4px; }
@@ -892,11 +905,23 @@ body.light-mode .kh-dinhvi-line { color: var(--accent); }
    nên chỉ cần đổi --card-bg theo mức là cả hai tự khớp nhau.
    Mỗi mức trộn màu nhấn vào nền trang (--navy) nên tự đúng cho cả chế độ
    Sáng lẫn Tối, và màu chữ vẫn theo chủ đề trang nên luôn đủ tương phản. */
-body.cards-l0 { --card-bg: color-mix(in srgb, var(--accent) 4%, var(--navy)); }
-body.cards-l1 { --card-bg: color-mix(in srgb, var(--accent) 8%, var(--navy)); }
-body.cards-l2 { --card-bg: color-mix(in srgb, var(--accent) 13%, var(--navy)); }
-body.cards-l3 { --card-bg: color-mix(in srgb, var(--accent) 19%, var(--navy)); }
-body.cards-l4 { --card-bg: color-mix(in srgb, var(--accent) 26%, var(--navy)); }
+/* Chế độ Tối: trộn một chút màu nhấn vào nền trang cho thẻ có sắc riêng.
+   Chế độ Sáng: dùng tông xám trung tính 100% (xem khối override bên dưới)
+   để nền thẻ không còn ngả xanh. */
+body.cards-l0 { --card-bg: color-mix(in srgb, var(--accent) 2%, var(--navy)); }
+body.cards-l1 { --card-bg: color-mix(in srgb, var(--accent) 4%, var(--navy)); }
+body.cards-l2 { --card-bg: color-mix(in srgb, var(--accent) 7%, var(--navy)); }
+body.cards-l3 { --card-bg: color-mix(in srgb, var(--accent) 11%, var(--navy)); }
+body.cards-l4 { --card-bg: color-mix(in srgb, var(--accent) 16%, var(--navy)); }
+
+/* Chế độ Sáng: nền thẻ & tab là xám trung tính thuần (R = G = B, không pha
+   xanh), đi theo 5 mức từ gần trắng tới xám đậm dần. Hai lớp class
+   (body.light-mode.cards-lN) nên luôn thắng khối trộn màu nhấn ở trên. */
+body.light-mode.cards-l0 { --card-bg: #fdfdfd; }
+body.light-mode.cards-l1 { --card-bg: #f8f8f8; }
+body.light-mode.cards-l2 { --card-bg: #f2f2f2; }
+body.light-mode.cards-l3 { --card-bg: #ebebeb; }
+body.light-mode.cards-l4 { --card-bg: #e2e2e2; }
 
 /* Áp mức đã chọn cho cả thẻ lẫn tab để hai bên luôn đồng bộ */
 body[class*="cards-l"] .kh-card { background: var(--card-bg); }
@@ -1400,8 +1425,8 @@ body.light-mode mark { background: rgba(59,130,246,0.18); color: #1d4ed8; font-w
             <svg class="icon-svg"><use href="#i-sun"/></svg>
             <span class="settings-item-label">Độ sáng</span>
             <div class="settings-slider-wrap">
-              <input class="settings-slider" id="brightnessSlider" type="range" min="0" max="4" step="1" value="3" oninput="setBrightStep(this.value)" aria-label="Độ sáng">
-              <span class="stepper-val" id="brightnessVal">Sáng</span>
+              <input class="settings-slider" id="brightnessSlider" type="range" min="0" max="4" step="1" value="2" oninput="setBrightStep(this.value)" aria-label="Độ sáng">
+              <span class="stepper-val" id="brightnessVal">Chuẩn</span>
             </div>
           </div>
           <div class="settings-item" title="Chỉnh độ đậm nền thẻ và tab sắp xếp (5 mức, luôn đồng bộ)">
@@ -1680,12 +1705,14 @@ document.addEventListener('keydown', function(e) {
 
 // ── UI PREFS: cỡ chữ + độ sáng (lưu qua localStorage) ──
 const FONT_STEPS = [0.8, 0.9, 1, 1.15, 1.3];      // 5 mức
-const BRIGHT_STEPS = [0.6, 0.75, 0.9, 1, 1.15];   // 5 mức
+// Mức "Chuẩn" nay là 100% (trước 90%) nên cùng một nấc sẽ sáng hơn;
+// các nấc khác dời lên theo để vẫn giữ thứ tự tăng dần.
+const BRIGHT_STEPS = [0.7, 0.85, 1, 1.13, 1.28];  // 5 mức
 // Tên 5 mức hiển thị thay cho % (dạng: rất …, …, chuẩn, …, rất …)
 const FONT_LABELS = ['Rất nhỏ', 'Nhỏ', 'Chuẩn', 'Lớn', 'Rất lớn'];
 const BRIGHT_LABELS = ['Rất tối', 'Tối', 'Chuẩn', 'Sáng', 'Rất sáng'];
 let fontStepIdx = 2;   // 100%
-let brightStepIdx = 3; // 100%
+let brightStepIdx = 2; // 'Chuẩn' = 100%
 function applyUiPrefs() {
   const fs = FONT_STEPS[fontStepIdx];
   const br = BRIGHT_STEPS[brightStepIdx];
